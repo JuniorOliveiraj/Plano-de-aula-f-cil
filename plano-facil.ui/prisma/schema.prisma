@@ -1,0 +1,98 @@
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "binary"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String
+  email         String    @unique
+  passwordHash  String?
+  googleId      String?   @unique
+  role          Role      @default(PROFESSORA)
+  plano         PlanoTipo @default(TRIAL)
+  trialExpiraEm DateTime  @default(dbgenerated("NOW() + INTERVAL '14 days'"))
+  planosNoMes   Int       @default(0)
+  planoResetEm  DateTime  @default(dbgenerated("DATE_TRUNC('month', NOW()) + INTERVAL '1 month'"))
+  ativo         Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  planos        Plano[]
+  escola        Escola?   @relation(fields: [escolaId], references: [id])
+  escolaId      String?
+  
+  // CORREÇÃO: Relacionamento reverso adicionado aqui
+  accounts      Account[]
+}
+
+model Plano {
+  id        String    @id @default(cuid())
+  userId    String
+  serie     String
+  materia   String
+  tipo      TipoPlano
+  jsonData  Json
+  createdAt DateTime  @default(now())
+  user      User      @relation(fields: [userId], references: [id])
+}
+
+model Escola {
+  id           String   @id @default(cuid())
+  nome         String
+  cnpj         String?  @unique
+  limiteUsers  Int      @default(10)
+  limitePlanos Int      @default(100)
+  ativo        Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  users        User[]
+}
+
+// Required by NextAuth Prisma Adapter
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+enum Role {
+  PROFESSORA
+  ADMIN_ESCOLA
+  ADMIN_SISTEMA
+}
+
+enum PlanoTipo {
+  TRIAL
+  PROFESSORA
+  ESCOLA
+}
+
+enum TipoPlano {
+  MENSAL
+  AULA_UNICA
+}
