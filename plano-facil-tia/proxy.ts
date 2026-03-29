@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth"
 import { NextResponse } from "next/server"
 
+// Next 16 replacement for middleware.ts
 export default auth((req) => {
   const isLoggedIn = !!req.auth
 

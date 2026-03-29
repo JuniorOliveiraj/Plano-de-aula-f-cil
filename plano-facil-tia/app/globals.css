@@ -1,26 +1,44 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* ═══════════════════════════════════════════════
+   Design System — Hearthside Ledger
+   Plano Fácil Tia · v1.0
+════════════════════════════════════════════════ */
+
+@theme {
+  /* Tipografia */
+  --font-sans: var(--font-jakarta);
+
+  /* Paleta principal */
+  --color-primary:             #904d00;
+  --color-primary-bright:      #ff8c00;
+  --color-surface:             #fff8f5;
+  --color-surface-low:         #fff1ea;
+  --color-surface-card:        #ffffff;
+  --color-surface-container:   #ffeade;
+  --color-terracotta:          #7c4a2d;
+  --color-on-surface:          #2f1402;
+  --color-on-surface-var:      #564334;
+  --color-secondary:           #c2571a;
+  --color-outline-var:         #ddc1ae;
+  --color-ink-error:           #ba1a1a;
+  --color-ink-success:         #2e7d32;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* ── Reset base ─────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+html { height: 100%; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100%;
+  background-color: #fff8f5;
+  color: #2f1402;
+  font-family: var(--font-jakarta, system-ui, sans-serif);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+/* ── Scrollbar suave ────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #fff1ea; }
+::-webkit-scrollbar-thumb { background: #ddc1ae; border-radius: 999px; }

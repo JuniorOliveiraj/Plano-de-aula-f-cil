@@ -5,6 +5,8 @@ export async function POST(req: Request) {
   try {
     const { name, email, password } = await req.json()
 
+    const normalizedEmail = String(email).toLowerCase().trim()
+
     if (!name || !email || !password) {
       return Response.json({ error: "Dados inválidos" }, { status: 400 })
     }
@@ -13,7 +15,7 @@ export async function POST(req: Request) {
       return Response.json({ error: "Senha muito curta" }, { status: 400 })
     }
 
-    const existing = await prisma.user.findUnique({ where: { email } })
+    const existing = await prisma.user.findUnique({ where: { email: normalizedEmail } })
     if (existing) {
       return Response.json({ error: "Email já cadastrado" }, { status: 400 })
     }
@@ -22,8 +24,8 @@ export async function POST(req: Request) {
 
     await prisma.user.create({
       data: {
-        name,
-        email,
+        name: String(name).trim(),
+        email: normalizedEmail,
         passwordHash: hash,
       },
     })

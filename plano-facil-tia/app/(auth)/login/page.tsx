@@ -7,18 +7,26 @@ export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   async function handleCredentialsLogin(e: React.FormEvent) {
     e.preventDefault()
     setLoading(true)
+    setError(null)
 
-    await signIn("credentials", {
+    const result = await signIn("credentials", {
       email,
       password,
-      redirect: true,
-      callbackUrl: "/dashboard",
+      redirect: false,
     })
 
+    if (result?.error) {
+      setError("Email ou senha incorretos.")
+      setLoading(false)
+      return
+    }
+
+    window.location.href = "/dashboard"
     setLoading(false)
   }
 
@@ -74,6 +82,10 @@ export default function LoginPage() {
               className="w-full h-14 rounded-xl bg-[#fff1ea] px-4 text-[#2f1402] outline-none focus:ring-2 focus:ring-[#ff8c00]"
             />
           </div>
+
+          {error && (
+            <p className="text-sm text-[#ba1a1a]">{error}</p>
+          )}
 
           <button
             type="submit"

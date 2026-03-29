@@ -4,6 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -14,19 +15,16 @@ model User {
   googleId      String?   @unique
   role          Role      @default(PROFESSORA)
   plano         PlanoTipo @default(TRIAL)
-  trialExpiraEm DateTime  @default(dbgenerated("NOW() + INTERVAL '14 days'"))
+  trialExpiraEm DateTime  @default(dbgenerated("(now() + '14 days'::interval)"))
   planosNoMes   Int       @default(0)
-  planoResetEm  DateTime  @default(dbgenerated("DATE_TRUNC('month', NOW()) + INTERVAL '1 month'"))
+  planoResetEm  DateTime  @default(dbgenerated("(date_trunc('month'::text, now()) + '1 mon'::interval)"))
   ativo         Boolean   @default(true)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  
+  escolaId      String?
+  accounts      Account[]
   planos        Plano[]
   escola        Escola?   @relation(fields: [escolaId], references: [id])
-  escolaId      String?
-  
-  // CORREÇÃO: Relacionamento reverso adicionado aqui
-  accounts      Account[]
 }
 
 model Plano {
@@ -51,22 +49,20 @@ model Escola {
   users        User[]
 }
 
-// Required by NextAuth Prisma Adapter
 model Account {
   id                String  @id @default(cuid())
   userId            String
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
