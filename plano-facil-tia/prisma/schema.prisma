@@ -91,3 +91,15 @@ enum TipoPlano {
   MENSAL
   AULA_UNICA
 }
+
+model BnccHabilidade {
+  id        Int      @id @default(autoincrement())
+  codigo    String   @unique
+  descricao String
+  serie     Int
+  area      String
+  unidade   String?
+  createdAt DateTime @default(now())
+
+  @@index([serie, area])
+}

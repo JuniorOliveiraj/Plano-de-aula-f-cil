@@ -13,7 +13,7 @@ export default function GerandoPage() {
         Para criar um plano, use o assistente de criação.
       </p>
       <Link
-        href="/plano/novo"
+        href="/dashboard/plano/novo"
         className="h-12 px-6 rounded-[14px] text-white font-semibold no-underline transition-opacity hover:opacity-90"
         style={{ background: "linear-gradient(135deg,#904d00,#ff8c00)" }}
       >

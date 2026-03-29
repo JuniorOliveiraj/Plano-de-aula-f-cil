@@ -20,7 +20,7 @@ const navItems = [
     ),
   },
   {
-    href: "/plano/novo",
+    href: "/dashboard/plano/novo",
     label: "Novo Plano",
     exact: false,
     icon: (
@@ -31,7 +31,7 @@ const navItems = [
     ),
   },
   {
-    href: "/planos",
+    href: "/dashboard/planos",
     label: "Meus Planos",
     exact: false,
     icon: (

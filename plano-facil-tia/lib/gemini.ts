@@ -89,3 +89,90 @@ O JSON deve seguir exatamente esta estrutura:
 
   throw ultimoErro
 }
+
+export function buildPromptSemPdf(params: {
+  serie: string
+  materia: string
+  tipo: "MENSAL" | "AULA_UNICA"
+  tema: string
+  codigoBncc: string
+  descricaoBncc: string
+  duracao: number
+}): string {
+  const { serie, materia, tipo, tema, codigoBncc, descricaoBncc, duracao } = params
+  const quantidadeAulas = tipo === "MENSAL" ? "entre 20 e 25 aulas" : "exatamente 1 aula detalhada"
+
+  return `
+Você é um assistente especializado em planejamento escolar para o ensino fundamental brasileiro.
+Gere um plano de aula com ${quantidadeAulas} para o ${serie} do ensino fundamental, disciplina de ${materia}.
+
+Tema/Atividade: ${tema}
+Habilidade BNCC: ${codigoBncc} — ${descricaoBncc}
+Duração de cada aula: ${duracao} minutos
+
+Crie aulas contextualizadas ao tema informado, garantindo que o objetivo de cada aula esteja alinhado à habilidade BNCC ${codigoBncc}. Adapte a metodologia e os recursos ao tempo disponível de ${duracao} minutos.
+Para cada aula, sugira 1 vídeo do YouTube em português e 1 referência confiável (Nova Escola, MEC, Khan Academy etc.).
+
+Responda SOMENTE com um JSON válido, sem texto adicional, sem markdown, sem blocos de código.
+O JSON deve seguir exatamente esta estrutura:
+{
+  "serie": "${serie}",
+  "materia": "${materia}",
+  "aulas": [
+    {
+      "aula": "Aula 1",
+      "data": "DD/MM/AAAA",
+      "objetivo": "...",
+      "conteudo": "...",
+      "metodologia": "...",
+      "recursos": ["item1", "item2"],
+      "video_url": "https://youtube.com/...",
+      "referencia_url": "https://..."
+    }
+  ]
+}
+  `.trim()
+}
+
+export async function gerarPlanoSemPdf(params: {
+  serie: string
+  materia: string
+  tipo: "MENSAL" | "AULA_UNICA"
+  tema: string
+  codigoBncc: string
+  descricaoBncc: string
+  duracao: number
+}): Promise<PlanoGerado> {
+  const prompt = buildPromptSemPdf(params)
+
+  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!)
+  const model = genAI.getGenerativeModel({
+    model: "gemini-2.5-flash",
+    generationConfig: {
+      temperature: 0.1,
+      responseMimeType: "application/json",
+    },
+  })
+
+  let ultimoErro: unknown
+  for (let tentativa = 1; tentativa <= MAX_TENTATIVAS; tentativa++) {
+    try {
+      const result = await model.generateContent([prompt])
+      const texto = result.response.text().trim()
+      const jsonLimpo = texto
+        .replace(/^```(?:json)?\s*/i, "")
+        .replace(/\s*```$/, "")
+        .trim()
+      const parsed = JSON.parse(jsonLimpo)
+      return PlanoSchema.parse(parsed)
+    } catch (err) {
+      console.error(`[gemini/semPdf] Tentativa ${tentativa} falhou:`, err)
+      ultimoErro = err
+      if (tentativa < MAX_TENTATIVAS) {
+        await new Promise((r) => setTimeout(r, 1500 * tentativa))
+      }
+    }
+  }
+
+  throw ultimoErro
+}

@@ -24,10 +24,10 @@ export default async function DashboardPage() {
   })
 
   // Calcula stats
-  const plano      = user?.plano ?? "TRIAL"
-  const usados     = user?.planosNoMes ?? 0
-  const limite     = plano === "TRIAL" ? 3 : plano === "PROFESSORA" ? 15 : 999
-  const restantes  = Math.max(0, limite - usados)
+  const plano = user?.plano ?? "TRIAL"
+  const usados = user?.planosNoMes ?? 0
+  const limite = plano === "TRIAL" ? 3 : plano === "PROFESSORA" ? 15 : 999
+  const restantes = Math.max(0, limite - usados)
 
   const hoje = new Date()
   const diasTrial = user?.trialExpiraEm
@@ -44,7 +44,7 @@ export default async function DashboardPage() {
       : `Renova em ${renovacaoEm}`
 
   return (
-    <div className="space-y-8 max-w-5xl">
+    <div className="space-y-8 max-w-7xl mx-auto">
 
       <div>
         <h1 className="text-[28px] font-700 text-[#2f1402] leading-tight">Seu painel</h1>
@@ -98,7 +98,7 @@ export default async function DashboardPage() {
           <p className="text-[#ffe4cc] text-[14px]">Escolha a série, envie o PDF do livro e receba o plano em Word. ✨</p>
         </div>
         <Link
-          href="/plano/novo"
+          href="/dashboard/plano/novo"
           className="relative z-10 flex items-center gap-2 h-12 px-7 rounded-[14px] text-[15px] font-700 shrink-0 transition-opacity hover:opacity-90 no-underline"
           style={{ backgroundColor: "#ffffff", color: "#904d00" }}
         >
@@ -113,7 +113,7 @@ export default async function DashboardPage() {
       <section>
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-[18px] font-700 text-[#2f1402]">Planos Recentes</h2>
-          <Link href="/planos" className="text-[13px] font-600 no-underline flex items-center gap-1 transition-opacity hover:opacity-70" style={{ color: "#c2571a" }}>
+          <Link href="/dashboard/planos" className="text-[13px] font-600 no-underline flex items-center gap-1 transition-opacity hover:opacity-70" style={{ color: "#c2571a" }}>
             Ver todos
             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
               <path d="M9 18l6-6-6-6" />

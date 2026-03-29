@@ -24,6 +24,7 @@ export default async function ResultadoPage({ params }: { params: Promise<{ id: 
       tipo={plano.tipo as "MENSAL" | "AULA_UNICA"}
       aulas={planoJson.aulas}
       createdAt={plano.createdAt.toISOString()}
+      codigoBncc={planoJson.codigoBncc}
     />
   )
 }

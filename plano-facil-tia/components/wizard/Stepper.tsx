@@ -1,13 +1,15 @@
 "use client"
 
-import { useWizardStore } from "@/store/wizardStore"
+import { useWizardStore, getPassoMaximo } from "@/store/wizardStore"
 
 export default function Stepper() {
   const passo = useWizardStore((s) => s.passo)
+  const modo = useWizardStore((s) => s.modo)
+  const passoMaximo = getPassoMaximo(modo)
 
   return (
     <div className="flex gap-3">
-      {[1, 2, 3, 4, 5].map((step) => (
+      {Array.from({ length: passoMaximo }, (_, i) => i + 1).map((step) => (
         <div
           key={step}
           className={`h-3 rounded-full transition-all duration-300 ${

@@ -1,6 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
+import { useState, useRef, useEffect } from "react"
 
 interface PlanCardProps {
   planoId: string
@@ -26,16 +27,38 @@ export default function PlanCard({ planoId, materia, serie, tipo, dataCriacao }:
   const tipoLabel = tipo === "MENSAL" ? "Plano Mensal" : "Aula Única"
   const tipoColor = tipo === "MENSAL" ? { color: "#904d00", bg: "#fff1ea" } : { color: "#2e7d32", bg: "#edf7ee" }
 
-  async function handleDownload() {
-    const res = await fetch(`/api/planos/${planoId}`)
-    if (!res.ok) { alert("Erro ao baixar. Tenta de novo!"); return }
-    const blob = await res.blob()
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement("a")
-    a.href = url
-    a.download = `plano_${serie}_${materia}.docx`
-    a.click()
-    URL.revokeObjectURL(url)
+  const [menuAberto, setMenuAberto] = useState(false)
+  const [baixando, setBaixando] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
+
+  // fecha ao clicar fora
+  useEffect(() => {
+    if (!menuAberto) return
+    function onClickFora(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuAberto(false)
+      }
+    }
+    document.addEventListener("mousedown", onClickFora)
+    return () => document.removeEventListener("mousedown", onClickFora)
+  }, [menuAberto])
+
+  async function handleDownload(formato: "word" | "pdf") {
+    setMenuAberto(false)
+    setBaixando(true)
+    try {
+      const res = await fetch(`/api/planos/${planoId}?formato=${formato}`)
+      if (!res.ok) { alert("Erro ao baixar. Tenta de novo!"); return }
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = `plano_${serie}_${materia}.${formato === "pdf" ? "pdf" : "docx"}`
+      a.click()
+      URL.revokeObjectURL(url)
+    } finally {
+      setBaixando(false)
+    }
   }
 
   return (
@@ -84,18 +107,97 @@ export default function PlanCard({ planoId, materia, serie, tipo, dataCriacao }:
 
       {/* Botões */}
       <div className="flex gap-2 pt-1">
+        {/* Botão de download com dropdown */}
+        <div className="relative flex-1" ref={menuRef}>
+          <div
+            className="flex rounded-[10px] overflow-hidden"
+            style={{ background: "linear-gradient(135deg,#904d00,#ff8c00)" }}
+          >
+            {/* Parte principal — clica para abrir/fechar */}
+            <button
+              onClick={() => setMenuAberto((v) => !v)}
+              disabled={baixando}
+              className="flex-1 flex items-center justify-center gap-1.5 h-10 text-[13px] font-600 text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+            >
+              {baixando ? (
+                <>
+                  <svg className="animate-spin" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5}>
+                    <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" strokeOpacity={0.3} />
+                    <path d="M3 12a9 9 0 019-9" />
+                  </svg>
+                  Baixando…
+                </>
+              ) : (
+                <>
+                  <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
+                  </svg>
+                  Baixar
+                </>
+              )}
+            </button>
+
+            {/* Divisor */}
+            <div style={{ width: 1, backgroundColor: "rgba(255,255,255,0.3)" }} />
+
+            {/* Seta */}
+            <button
+              onClick={() => setMenuAberto((v) => !v)}
+              disabled={baixando}
+              className="flex items-center justify-center w-8 h-10 text-white transition-opacity hover:opacity-90 disabled:opacity-60"
+              aria-label="Escolher formato de download"
+            >
+              <svg
+                width="12" height="12" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"
+                style={{ transition: "transform 0.2s", transform: menuAberto ? "rotate(180deg)" : "rotate(0deg)" }}
+              >
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Dropdown */}
+          {menuAberto && (
+            <div
+              className="absolute left-0 right-0 mt-1.5 rounded-[12px] overflow-hidden z-50"
+              style={{
+                backgroundColor: "#ffffff",
+                boxShadow: "0 8px 24px rgba(144,77,0,0.15)",
+                border: "1px solid #f0ddd0",
+              }}
+            >
+              <button
+                onClick={() => handleDownload("word")}
+                className="w-full flex items-center gap-3 px-4 py-3 text-left text-[13px] font-500 text-[#2f1402] transition-colors"
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#fff8f5" }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent" }}
+              >
+                <span className="text-lg">📝</span>
+                <div>
+                  <p className="font-600 text-[#2f1402]">Word (.docx)</p>
+                  <p className="text-[11px] text-[#a87b5e]">Edite no Word ou Google Docs</p>
+                </div>
+              </button>
+              <div style={{ height: 1, backgroundColor: "#f0ddd0", margin: "0 12px" }} />
+              <button
+                onClick={() => handleDownload("pdf")}
+                className="w-full flex items-center gap-3 px-4 py-3 text-left text-[13px] font-500 text-[#2f1402] transition-colors"
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#fff8f5" }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent" }}
+              >
+                <span className="text-lg">📄</span>
+                <div>
+                  <p className="font-600 text-[#2f1402]">PDF</p>
+                  <p className="text-[11px] text-[#a87b5e]">Pronto pra imprimir ou compartilhar</p>
+                </div>
+              </button>
+            </div>
+          )}
+        </div>
+
         <button
-          onClick={handleDownload}
-          className="flex-1 flex items-center justify-center gap-1.5 h-10 rounded-[10px] text-[13px] font-600 text-white transition-opacity duration-150 hover:opacity-90"
-          style={{ background: "linear-gradient(135deg,#904d00,#ff8c00)" }}
-        >
-          <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3" />
-          </svg>
-          Baixar
-        </button>
-        <button
-          onClick={() => router.push(`/plano/resultado/${planoId}`)}
+          onClick={() => router.push(`/dashboard/plano/resultado/${planoId}`)}
           className="flex items-center justify-center gap-1.5 h-10 px-4 rounded-[10px] text-[13px] font-500 transition-colors duration-150"
           style={{ backgroundColor: "#fff1ea", color: "#7c4a2d", border: "1px solid #f0ddd0" }}
           onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#ffeade" }}

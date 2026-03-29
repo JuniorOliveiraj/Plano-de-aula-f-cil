@@ -7,8 +7,6 @@ export default auth((req) => {
 
   const protectedPaths = [
     "/dashboard",
-    "/plano",
-    "/planos",
   ]
 
   const isProtectedRoute = protectedPaths.some((path) =>
@@ -24,7 +22,5 @@ export default auth((req) => {
 export const config = {
   matcher: [
     "/dashboard/:path*",
-    "/plano/:path*",
-    "/planos/:path*",
   ],
 }

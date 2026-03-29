@@ -12,9 +12,10 @@ export const AulaSchema = z.object({
 })
 
 export const PlanoSchema = z.object({
-  serie:   z.string(),
-  materia: z.string(),
-  aulas:   z.array(AulaSchema).min(1).max(25),
+  serie:       z.string(),
+  materia:     z.string(),
+  codigoBncc:  z.string().optional(),
+  aulas:       z.array(AulaSchema).min(1).max(25),
 })
 
 export type Aula       = z.infer<typeof AulaSchema>
