@@ -1,0 +1,9 @@
+[
+  { "codigo": "EF03MA01", "serie": 3, "area": "MA", "unidade": "Números", "descricao": "Ler, escrever e comparar números naturais de até a ordem de unidade de milhar, estabelecendo relações entre os registros numéricos e em língua materna." },
+  { "codigo": "EF03MA02", "serie": 3, "area": "MA", "unidade": "Números", "descricao": "Identificar características do sistema de numeração decimal, utilizando a composição e a decomposição de números naturais de até quatro ordens." },
+  { "codigo": "EF03MA03", "serie": 3, "area": "MA", "unidade": "Números", "descricao": "Construir e utilizar fatos básicos da adição e da multiplicação para o cálculo mental ou escrito." },
+  { "codigo": "EF03MA04", "serie": 3, "area": "MA", "unidade": "Números", "descricao": "Resolver e elaborar problemas de adição e de subtração com os significados de juntar, acrescentar, separar, retirar, comparar e completar quantidades, utilizando estratégias diversas, como cálculo por estimativa, cálculo mental e algoritmos." },
+  { "codigo": "EF03MA05", "serie": 3, "area": "MA", "unidade": "Grandezas e medidas", "descricao": "Estimar, medir e comparar comprimentos de objetos, usando unidades de medida não padronizadas e padronizadas (metro, centímetro e milímetro) e instrumentos de medida adequados." },
+  { "codigo": "EF03MA06", "serie": 3, "area": "MA", "unidade": "Geometria", "descricao": "Identificar e registrar, em linguagem verbal ou não verbal, a localização e os deslocamentos de pessoas e de objetos no espaço, considerando mais de um ponto de referência, e indicar as mudanças de direção e de sentido." },
+  { "codigo": "EF03MA07", "serie": 3, "area": "MA", "unidade": "Números", "descricao": "Resolver e elaborar problemas de multiplicação (por 2, 3, 4, 5 e 10) com os significados de adição de parcelas iguais e elementos apresentados em disposição retangular." }
+]

@@ -1,0 +1,9 @@
+[
+  { "codigo": "EF01LP01", "serie": 1, "area": "LP", "unidade": "Leitura", "descricao": "Reconhecer que textos são lidos e escritos da esquerda para a direita e de cima para baixo da página." },
+  { "codigo": "EF01LP02", "serie": 1, "area": "LP", "unidade": "Leitura", "descricao": "Buscar, com a mediação do professor, informações em textos lidos em voz alta, como listas, avisos, receitas, entre outros." },
+  { "codigo": "EF01LP03", "serie": 1, "area": "LP", "unidade": "Escrita", "descricao": "Escrever, espontaneamente ou por ditado, palavras e frases de forma alfabética – usando letras/grafemas que representem fonemas." },
+  { "codigo": "EF01LP04", "serie": 1, "area": "LP", "unidade": "Oralidade", "descricao": "Escutar com atenção textos lidos e contados pelo professor, formulando perguntas e comentários sobre o assunto." },
+  { "codigo": "EF01LP05", "serie": 1, "area": "LP", "unidade": "Análise Linguística", "descricao": "Reconhecer que as letras do alfabeto são ordenadas e que existem letras maiúsculas e minúsculas." },
+  { "codigo": "EF01LP06", "serie": 1, "area": "LP", "unidade": "Leitura", "descricao": "Ler palavras novas com precisão na decodificação, no caso de palavras de uso frequente, ler globalmente, por memorização." },
+  { "codigo": "EF01LP16", "serie": 1, "area": "LP", "unidade": "Leitura", "descricao": "Ler e compreender, em colaboração com os colegas e com a ajuda do professor, quadras, quadrinhas, parlendas, trava-línguas, dentre outros gêneros do campo da vida cotidiana." }
+]

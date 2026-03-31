@@ -1,0 +1,6 @@
+[
+  { "codigo": "EF02CI01", "serie": 2, "area": "CI", "unidade": "Matéria e energia", "descricao": "Identificar de que materiais (metais, madeira, vidro etc.) são feitos os objetos que fazem parte da vida cotidiana, como esses objetos são utilizados e com quais materiais eram produzidos no passado." },
+  { "codigo": "EF02CI02", "serie": 2, "area": "CI", "unidade": "Vida e evolução", "descricao": "Propor o uso de diferentes materiais para a construção de objetos de uso cotidiano, tendo em vista algumas propriedades desses materiais (flexibilidade, dureza, transparência etc.)." },
+  { "codigo": "EF02CI03", "serie": 2, "area": "CI", "unidade": "Vida e evolução", "descricao": "Descrever características de plantas e animais (tamanho, forma, cor, fase da vida, local onde se desenvolvem etc.) que fazem parte de seu cotidiano e relacioná-las ao ambiente em que vivem." },
+  { "codigo": "EF02CI04", "serie": 2, "area": "CI", "unidade": "Terra e Universo", "descricao": "Descrever as posições do Sol em diferentes horários do dia e associá-las ao tamanho da sombra projetada." }
+]

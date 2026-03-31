@@ -1,0 +1,7 @@
+[
+  { "codigo": "EF04LP01", "serie": 4, "area": "LP", "unidade": "Leitura", "descricao": "Ler e compreender, com autonomia, textos de divulgação científica para crianças, identificando a ideia central do texto e relacionando informações." },
+  { "codigo": "EF04LP02", "serie": 4, "area": "LP", "unidade": "Escrita", "descricao": "Planejar e produzir textos sobre temas de interesse, com base em resultados de pesquisas em fontes de informação impressas ou digitais." },
+  { "codigo": "EF04LP03", "serie": 4, "area": "LP", "unidade": "Análise Linguística", "descricao": "Identificar a função e as flexões de verbos em textos, utilizando esses conhecimentos para melhorar as produções textuais." },
+  { "codigo": "EF04LP04", "serie": 4, "area": "LP", "unidade": "Oralidade", "descricao": "Produzir e ouvir textos orais de diferentes gêneros, como seminários, entrevistas, debates, entre outros, adequando a linguagem." },
+  { "codigo": "EF04LP05", "serie": 4, "area": "LP", "unidade": "Leitura", "descricao": "Inferir informações implícitas nos textos lidos, com base em elementos textuais e contextuais." }
+]

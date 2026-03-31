@@ -1,0 +1,8 @@
+[
+  { "codigo": "EF02LP01", "serie": 2, "area": "LP", "unidade": "Leitura", "descricao": "Ler e compreender, em colaboração com os colegas e com a ajuda do professor, enunciados de tarefas escolares, avisos, recados, convites e cartas." },
+  { "codigo": "EF02LP02", "serie": 2, "area": "LP", "unidade": "Escrita", "descricao": "Planejar e produzir, em colaboração com os colegas e com a ajuda do professor, listas de regras e de procedimentos, cartazes de sala e de escola, com a função de informar e/ou de instruir." },
+  { "codigo": "EF02LP03", "serie": 2, "area": "LP", "unidade": "Análise Linguística", "descricao": "Segmentar corretamente as palavras ao escrever frases e textos, identificando os espaços em branco como separadores de palavras." },
+  { "codigo": "EF02LP04", "serie": 2, "area": "LP", "unidade": "Oralidade", "descricao": "Escutar, com atenção, textos do gênero notícia, dentre outros, formulando perguntas pertinentes ao tema e respondendo a perguntas feitas pelo professor e pelos colegas." },
+  { "codigo": "EF02LP05", "serie": 2, "area": "LP", "unidade": "Leitura", "descricao": "Ler e compreender, com certa autonomia, textos literários de diferentes gêneros e extensões, inclusive aqueles sem ilustrações, estabelecendo preferências por gêneros, temas, autores." },
+  { "codigo": "EF02LP15", "serie": 2, "area": "LP", "unidade": "Leitura", "descricao": "Cantar cantigas e canções, obedecendo ao ritmo e à melodia." }
+]

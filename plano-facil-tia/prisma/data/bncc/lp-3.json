@@ -1,0 +1,7 @@
+[
+  { "codigo": "EF03LP01", "serie": 3, "area": "LP", "unidade": "Leitura", "descricao": "Ler e compreender, silenciosamente e, em seguida, em voz alta, com autonomia e fluência, textos curtos com nível de textualidade adequado." },
+  { "codigo": "EF03LP02", "serie": 3, "area": "LP", "unidade": "Escrita", "descricao": "Planejar e produzir, com certa autonomia, cartas pessoais de reclamação, com base em situação problema apresentada, utilizando as convenções do gênero carta." },
+  { "codigo": "EF03LP03", "serie": 3, "area": "LP", "unidade": "Análise Linguística", "descricao": "Identificar a função e as flexões de substantivos e adjetivos e utilizar esses conhecimentos na produção de textos." },
+  { "codigo": "EF03LP04", "serie": 3, "area": "LP", "unidade": "Oralidade", "descricao": "Identificar e reproduzir, em relatos orais de experiências, a sequência de eventos, as descrições de personagens e de ambientes." },
+  { "codigo": "EF03LP05", "serie": 3, "area": "LP", "unidade": "Leitura", "descricao": "Identificar e diferenciar, em textos, substantivos e verbos e suas funções na oração: o substantivo como o centro do grupo nominal e o verbo como o núcleo do grupo verbal." }
+]

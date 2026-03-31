@@ -1,0 +1,6 @@
+[
+  { "codigo": "EF04CI01", "serie": 4, "area": "CI", "unidade": "Matéria e energia", "descricao": "Identificar misturas na vida diária, com base em suas propriedades físicas observáveis, reconhecendo sua composição." },
+  { "codigo": "EF04CI02", "serie": 4, "area": "CI", "unidade": "Matéria e energia", "descricao": "Testar e relatar transformações nos materiais do dia a dia quando expostos a diferentes condições (aquecimento, resfriamento, luz e umidade)." },
+  { "codigo": "EF04CI03", "serie": 4, "area": "CI", "unidade": "Vida e evolução", "descricao": "Analisar e construir cadeias alimentares simples, reconhecendo a posição ocupada pelos seres vivos nessas cadeias e o papel do Sol como fonte primária de energia." },
+  { "codigo": "EF04CI04", "serie": 4, "area": "CI", "unidade": "Terra e Universo", "descricao": "Identificar os pontos cardeais, com base no registro de diferentes posições relativas do Sol e da sombra de uma vara (gnômon)." }
+]

@@ -1,0 +1,6 @@
+[
+  { "codigo": "EF05CI01", "serie": 5, "area": "CI", "unidade": "Matéria e energia", "descricao": "Explorar fenômenos da vida cotidiana que evidenciem propriedades dos materiais (esticamento, dobramento, dureza, absorção de água, brilho, flexibilidade etc.)." },
+  { "codigo": "EF05CI02", "serie": 5, "area": "CI", "unidade": "Matéria e energia", "descricao": "Aplicar os conhecimentos sobre as mudanças de estado físico da água para explicar o ciclo hidrológico e analisar suas implicações." },
+  { "codigo": "EF05CI03", "serie": 5, "area": "CI", "unidade": "Vida e evolução", "descricao": "Selecionar argumentos que justifiquem por que os sistemas digestório e respiratório são considerados corresponsáveis pelo processo de nutrição do organismo." },
+  { "codigo": "EF05CI04", "serie": 5, "area": "CI", "unidade": "Terra e Universo", "descricao": "Identificar os planetas do Sistema Solar, suas características e os movimentos de rotação e translação, relacionando-os com a ocorrência de dias, noites e estações do ano." }
+]

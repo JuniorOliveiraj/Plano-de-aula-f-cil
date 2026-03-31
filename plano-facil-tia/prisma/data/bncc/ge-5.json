@@ -1,0 +1,6 @@
+[
+  { "codigo": "EF05GE01", "serie": 5, "area": "GE", "unidade": "O sujeito e seu lugar no mundo", "descricao": "Descrever e analisar dinâmicas populacionais na UF em que vive, estabelecendo relações entre migrações e condições de infraestrutura." },
+  { "codigo": "EF05GE02", "serie": 5, "area": "GE", "unidade": "Conexões e escalas", "descricao": "Identificar as formas de representação cartográfica do Brasil e do mundo, reconhecendo a importância da escala, da legenda e da orientação nos mapas." },
+  { "codigo": "EF05GE03", "serie": 5, "area": "GE", "unidade": "Mundo do trabalho", "descricao": "Mapear os usos do solo (residencial, comercial, industrial, serviços, lazer etc.) na cidade ou no campo, identificando os agentes que os produzem." },
+  { "codigo": "EF05GE04", "serie": 5, "area": "GE", "unidade": "Natureza, ambientes e qualidade de vida", "descricao": "Distinguir características das regiões brasileiras (Norte, Nordeste, Centro-Oeste, Sudeste e Sul) com base em aspectos naturais, culturais e econômicos." }
+]

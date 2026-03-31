@@ -1,0 +1,6 @@
+[
+  { "codigo": "EF01CI01", "serie": 1, "area": "CI", "unidade": "Matéria e energia", "descricao": "Comparar características de diferentes materiais presentes em objetos de uso cotidiano, discutindo sua origem, os modos como são descartados e como podem ser usados de forma mais consciente." },
+  { "codigo": "EF01CI02", "serie": 1, "area": "CI", "unidade": "Vida e evolução", "descricao": "Localizar, nomear e representar graficamente (por meio de desenhos) partes do corpo humano e explicar suas funções." },
+  { "codigo": "EF01CI03", "serie": 1, "area": "CI", "unidade": "Vida e evolução", "descricao": "Discutir as razões pelas quais os hábitos de higiene do corpo (lavar as mãos antes de comer, escovar os dentes, limpar os olhos, o nariz e as orelhas etc.) são necessários para a manutenção da saúde." },
+  { "codigo": "EF01CI04", "serie": 1, "area": "CI", "unidade": "Terra e Universo", "descricao": "Identificar características sobre o modo de vida (o que comem, como se reproduzem, como se locomovem etc.) dos animais mais comuns no ambiente próximo." }
+]

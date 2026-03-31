@@ -1,0 +1,9 @@
+[
+  { "codigo": "EF01MA01", "serie": 1, "area": "MA", "unidade": "Números", "descricao": "Utilizar números naturais como indicador de quantidade ou de ordem em diferentes situações cotidianas e reconhecer situações em que os números não indicam contagem nem ordem, mas sim código de identificação." },
+  { "codigo": "EF01MA02", "serie": 1, "area": "MA", "unidade": "Números", "descricao": "Contar de maneira exata ou aproximada, utilizando diferentes estratégias como o pareamento e outros agrupamentos." },
+  { "codigo": "EF01MA03", "serie": 1, "area": "MA", "unidade": "Números", "descricao": "Estimar e comparar quantidades de objetos de dois conjuntos (em torno de 20 elementos), por estimativa e/ou por correspondência (um a um, dois a um, entre outros), para indicar 'tem mais', 'tem menos' ou 'tem a mesma quantidade'." },
+  { "codigo": "EF01MA04", "serie": 1, "area": "MA", "unidade": "Números", "descricao": "Contar a quantidade de objetos de coleções até 100 unidades e indicar a quantidade por meio de escrita numérica." },
+  { "codigo": "EF01MA05", "serie": 1, "area": "MA", "unidade": "Números", "descricao": "Comparar números naturais de até duas ordens em situações cotidianas, com e sem suporte da reta numérica." },
+  { "codigo": "EF01MA06", "serie": 1, "area": "MA", "unidade": "Álgebra", "descricao": "Construir fatos básicos da adição e utilizá-los em procedimentos de cálculo para resolver problemas." },
+  { "codigo": "EF01MA11", "serie": 1, "area": "MA", "unidade": "Geometria", "descricao": "Descrever a localização de pessoas e de objetos no espaço em relação à sua própria posição, utilizando termos como à direita, à esquerda, em frente, atrás." }
+]

@@ -1,0 +1,8 @@
+[
+  { "codigo": "EF05LP01", "serie": 5, "area": "LP", "unidade": "Leitura", "descricao": "Identificar o tema e a argumentação central de textos de opinião, distinguindo fatos de opiniões." },
+  { "codigo": "EF05LP02", "serie": 5, "area": "LP", "unidade": "Escrita", "descricao": "Planejar e produzir, com autonomia, textos de diferentes gêneros e finalidades, considerando a situação comunicativa e a estrutura composicional." },
+  { "codigo": "EF05LP03", "serie": 5, "area": "LP", "unidade": "Análise Linguística", "descricao": "Identificar e usar adequadamente a concordância nominal e verbal em textos produzidos." },
+  { "codigo": "EF05LP04", "serie": 5, "area": "LP", "unidade": "Oralidade", "descricao": "Argumentar oralmente sobre temas polêmicos, respeitando diferentes pontos de vista e apresentando propostas e justificativas." },
+  { "codigo": "EF05LP05", "serie": 5, "area": "LP", "unidade": "Leitura", "descricao": "Inferir e justificar, por meio de nota de rodapé, o significado de palavras ou expressões desconhecidas em textos." },
+  { "codigo": "EF05LP15", "serie": 5, "area": "LP", "unidade": "Leitura", "descricao": "Ler/assistir e compreender, com autonomia, notícias, reportagens, vídeos em vlogs argumentativos, dentre outros gêneros do jornalismo." }
+]

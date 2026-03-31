@@ -1,0 +1,9 @@
+[
+  { "codigo": "EF02MA01", "serie": 2, "area": "MA", "unidade": "Números", "descricao": "Comparar e ordenar números naturais (até a ordem de centenas) pela compreensão de características do sistema de numeração decimal (valor posicional e função do zero)." },
+  { "codigo": "EF02MA02", "serie": 2, "area": "MA", "unidade": "Números", "descricao": "Fazer estimativas por meio de estratégias diversas a respeito da quantidade de objetos de coleções e registrar o resultado da contagem desses objetos (até 1000 unidades)." },
+  { "codigo": "EF02MA03", "serie": 2, "area": "MA", "unidade": "Números", "descricao": "Comparar quantidades de objetos de dois conjuntos, por estimativa e/ou por correspondência (um a um, dois a um, entre outros), para indicar 'tem mais', 'tem menos' ou 'tem a mesma quantidade', indicando, quando for o caso, quantos a mais e quantos a menos." },
+  { "codigo": "EF02MA04", "serie": 2, "area": "MA", "unidade": "Números", "descricao": "Compor e decompor números naturais de até três ordens, com suporte de material manipulável, contribuindo para a compreensão de características do sistema de numeração decimal e o desenvolvimento de estratégias de cálculo." },
+  { "codigo": "EF02MA05", "serie": 2, "area": "MA", "unidade": "Números", "descricao": "Construir fatos básicos da adição e da subtração e utilizá-los no cálculo mental e escrito." },
+  { "codigo": "EF02MA06", "serie": 2, "area": "MA", "unidade": "Grandezas e medidas", "descricao": "Indicar a duração de intervalos de tempo entre duas datas, como dias da semana e meses do ano, utilizando calendário, para planejamentos e organização de agenda." },
+  { "codigo": "EF02MA14", "serie": 2, "area": "MA", "unidade": "Geometria", "descricao": "Reconhecer, nomear e comparar figuras geométricas espaciais (cubo, bloco retangular, pirâmide, cone, cilindro e esfera), relacionando-as com objetos do mundo físico." }
+]

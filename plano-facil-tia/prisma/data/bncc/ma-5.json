@@ -1,0 +1,9 @@
+[
+  { "codigo": "EF05MA01", "serie": 5, "area": "MA", "unidade": "Números", "descricao": "Ler, escrever e ordenar números naturais acima de 1000, com compreensão das principais características do sistema de numeração decimal." },
+  { "codigo": "EF05MA02", "serie": 5, "area": "MA", "unidade": "Números", "descricao": "Ler, escrever e ordenar números racionais na forma decimal com compreensão das principais características do sistema de numeração decimal." },
+  { "codigo": "EF05MA03", "serie": 5, "area": "MA", "unidade": "Números", "descricao": "Identificar e representar frações (menores e maiores que a unidade), reconhecendo e produzindo diferentes representações fracionárias de um mesmo número racional." },
+  { "codigo": "EF05MA04", "serie": 5, "area": "MA", "unidade": "Números", "descricao": "Identificar frações equivalentes e simplificar frações, utilizando a multiplicação e a divisão." },
+  { "codigo": "EF05MA05", "serie": 5, "area": "MA", "unidade": "Números", "descricao": "Resolver e elaborar problemas envolvendo a adição e a subtração de números racionais expressos na forma decimal." },
+  { "codigo": "EF05MA06", "serie": 5, "area": "MA", "unidade": "Álgebra", "descricao": "Registrar com expressão matemática a regularidade observada em sequências de números, figuras e objetos." },
+  { "codigo": "EF05MA19", "serie": 5, "area": "MA", "unidade": "Grandezas e medidas", "descricao": "Resolver e elaborar problemas envolvendo medidas das grandezas comprimento, área, massa, tempo, temperatura e capacidade." }
+]

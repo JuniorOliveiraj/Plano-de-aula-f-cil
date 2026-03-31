@@ -1,0 +1,9 @@
+[
+  { "codigo": "EF04MA01", "serie": 4, "area": "MA", "unidade": "Números", "descricao": "Ler, escrever e ordenar números naturais até a ordem de dezenas de milhar com compreensão das principais características do sistema de numeração decimal." },
+  { "codigo": "EF04MA02", "serie": 4, "area": "MA", "unidade": "Números", "descricao": "Mostrar, por decomposição e composição, que todo número natural pode ser escrito por meio de adições e multiplicações por potências de dez." },
+  { "codigo": "EF04MA03", "serie": 4, "area": "MA", "unidade": "Números", "descricao": "Resolver e elaborar problemas com números naturais envolvendo adição e subtração, utilizando estratégias diversas." },
+  { "codigo": "EF04MA04", "serie": 4, "area": "MA", "unidade": "Números", "descricao": "Utilizar as relações entre adição e subtração, bem como entre multiplicação e divisão, para ampliar as estratégias de cálculo." },
+  { "codigo": "EF04MA05", "serie": 4, "area": "MA", "unidade": "Números", "descricao": "Reconhecer e ler números racionais cujas representações decimais são finitas (como 0,5 e 3,75), utilizando a notação centesimal." },
+  { "codigo": "EF04MA06", "serie": 4, "area": "MA", "unidade": "Grandezas e medidas", "descricao": "Medir e estimar comprimentos (incluindo perímetros), massas e capacidades, utilizando unidades de medida padronizadas mais usuais." },
+  { "codigo": "EF04MA09", "serie": 4, "area": "MA", "unidade": "Números", "descricao": "Reconhecer as frações unitárias mais usuais (1/2, 1/3, 1/4, 1/5, 1/10 e 1/100) como unidades de medida menores do que uma unidade." }
+]
