@@ -65,6 +65,7 @@ export const useWizardStore = create<WizardState>((set) => ({
   descricaoBncc: "",
   duracao: 45,
   dataAula: "",
+  nomeAula: "",
 
   // actions existentes
   setSerie: (v) => set({ serie: v }),

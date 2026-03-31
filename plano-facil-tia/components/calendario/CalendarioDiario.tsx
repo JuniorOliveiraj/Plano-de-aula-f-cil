@@ -97,15 +97,15 @@ export default function CalendarioDiario({ planos, dia, onAulaSelect }: Calendar
           {/* Cabeçalho do card */}
           <div className="flex items-start justify-between gap-2">
             <div>
-              <p className="text-[15px] font-600" style={{ color: "var(--ds-on-surface)" }}>
+              <p className="text-[17px] font-700" style={{ color: "var(--ds-on-surface)" }}>
                 {aula.aula}
               </p>
-              <p className="text-[12px] mt-0.5" style={{ color: "var(--ds-muted)" }}>
+               <p className="text-[14px] mt-0.5" style={{ color: "var(--ds-muted)" }}>
                 {materia} · {serie}
               </p>
             </div>
             <span
-              className="shrink-0 text-[11px] font-600 px-2 py-0.5 rounded-full"
+              className="shrink-0 text-[12px] font-700 px-2.5 py-1 rounded-full"
               style={{
                 backgroundColor: "var(--ds-surface-low)",
                 color: "var(--ds-primary)",
@@ -118,10 +118,10 @@ export default function CalendarioDiario({ planos, dia, onAulaSelect }: Calendar
 
           {/* Conteúdo */}
           <div>
-            <p className="text-[11px] font-700 uppercase tracking-[0.06em] mb-1" style={{ color: "var(--ds-muted)" }}>
+            <p className="text-[12px] font-700 uppercase tracking-[0.06em] mb-1" style={{ color: "var(--ds-muted)" }}>
               Conteúdo
             </p>
-            <p className="text-[13px] leading-relaxed" style={{ color: "var(--ds-on-surface)" }}>
+            <p className="text-[15px] leading-relaxed" style={{ color: "var(--ds-on-surface)" }}>
               {aula.conteudo}
             </p>
           </div>
@@ -131,7 +131,7 @@ export default function CalendarioDiario({ planos, dia, onAulaSelect }: Calendar
             <p className="text-[11px] font-700 uppercase tracking-[0.06em] mb-1" style={{ color: "var(--ds-muted)" }}>
               Objetivo
             </p>
-            <p className="text-[13px] leading-relaxed" style={{ color: "var(--ds-on-surface)" }}>
+            <p className="text-[15px] leading-relaxed" style={{ color: "var(--ds-on-surface)" }}>
               {aula.objetivo}
             </p>
           </div>
@@ -141,7 +141,7 @@ export default function CalendarioDiario({ planos, dia, onAulaSelect }: Calendar
             <p className="text-[11px] font-700 uppercase tracking-[0.06em] mb-1" style={{ color: "var(--ds-muted)" }}>
               Metodologia
             </p>
-            <p className="text-[13px] leading-relaxed" style={{ color: "var(--ds-on-surface)" }}>
+            <p className="text-[15px] leading-relaxed" style={{ color: "var(--ds-on-surface)" }}>
               {aula.metodologia}
             </p>
           </div>

@@ -69,7 +69,7 @@ export default function CalendarioMensal({
         {DIAS_SEMANA.map((nome) => (
           <div
             key={nome}
-            className="text-center text-[11px] font-700 uppercase tracking-[0.06em] py-2"
+            className="text-center text-[13px] font-700 uppercase tracking-[0.06em] py-2.5"
             style={{ color: "var(--ds-muted)" }}
           >
             {nome}
@@ -84,7 +84,7 @@ export default function CalendarioMensal({
             return (
               <div
                 key={`empty-${idx}`}
-                className="min-h-[72px] rounded-[8px]"
+                className="min-h-[100px] rounded-[10px]"
                 style={{ backgroundColor: "var(--ds-surface-low)", opacity: 0.4 }}
               />
             )

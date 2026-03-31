@@ -28,7 +28,7 @@ export default function AulaChip({ aula, planoId, aulaIndex, materia, onSelect }
     <div
       ref={ref}
       onClick={() => onSelect(aula, planoId, aulaIndex)}
-      className="flex flex-col gap-0.5 px-2 py-1 rounded-[8px] text-[11px] select-none transition-opacity"
+      className="flex flex-col gap-1 px-2.5 py-3.5 rounded-[8px] text-[13px] select-none transition-opacity"
       style={{
         backgroundColor: "var(--ds-surface-low)",
         border: "1px solid var(--ds-border)",

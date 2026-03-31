@@ -33,7 +33,7 @@ O JSON deve seguir exatamente esta estrutura:
   "materia": "${materia}",
   "aulas": [
     {
-      "aula": "Aula 1",
+      "aula": "(De um nome para essa aula)",
       "data": "DD/MM/AAAA",
       "objetivo": "...",
       "conteudo": "...",

@@ -69,10 +69,10 @@ export default function CalendarioSemanal({
             className="text-center py-2 rounded-[8px]"
             style={{ backgroundColor: "var(--ds-surface-low)" }}
           >
-            <p className="text-[11px] font-700 uppercase tracking-[0.06em]" style={{ color: "var(--ds-muted)" }}>
+            <p className="text-[13px] font-700 uppercase tracking-[0.06em]" style={{ color: "var(--ds-muted)" }}>
               {NOMES_DIA[dia.getDay()]}
             </p>
-            <p className="text-[13px] font-600" style={{ color: "var(--ds-on-surface)" }}>
+            <p className="text-[15px] font-700" style={{ color: "var(--ds-on-surface)" }}>
               {formatarDiaHeader(dia)}
             </p>
           </div>

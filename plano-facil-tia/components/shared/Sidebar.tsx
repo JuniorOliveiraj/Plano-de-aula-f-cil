@@ -54,7 +54,7 @@ const navItems = [
     ),
   },
   {
-    href: "/ajuda",
+    href: "/dashboard/ajuda",
     label: "Ajuda",
     exact: false,
     icon: (

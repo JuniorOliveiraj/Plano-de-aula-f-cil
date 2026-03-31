@@ -82,7 +82,7 @@ export default function DiaCalendario({
   return (
     <div
       ref={ref}
-      className="relative flex flex-col gap-1 p-1.5 rounded-[8px] min-h-[72px] transition-colors"
+      className="relative flex flex-col gap-2 p-2 rounded-[10px] min-h-[100px] transition-colors"
       style={{
         border: "1px solid var(--ds-border)",
         backgroundColor: isOver ? "var(--ds-surface-low)" : "var(--ds-surface-card)",
@@ -92,7 +92,7 @@ export default function DiaCalendario({
     >
       {/* Número do dia */}
       <button
-        className="self-start text-[12px] font-600 w-6 h-6 flex items-center justify-center rounded-full transition-colors"
+        className="self-start text-[14px] font-700 w-7 h-7 flex items-center justify-center rounded-full transition-colors"
         style={{ color: "var(--ds-on-surface)" }}
         onClick={(e) => { e.stopPropagation(); handleCelulaClick() }}
         onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "var(--ds-surface-low)" }}

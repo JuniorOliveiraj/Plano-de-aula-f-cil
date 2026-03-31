@@ -178,67 +178,6 @@ async function main() {
       { codigo: "EF05CI03", serie: 5, area: "CI", unidade: "Vida e evolução", descricao: "Selecionar argumentos que justifiquem por que os sistemas digestório e respiratório são considerados corresponsáveis pelo processo de nutrição do organismo." },
       { codigo: "EF05CI04", serie: 5, area: "CI", unidade: "Terra e Universo", descricao: "Identificar os planetas do Sistema Solar, suas características e os movimentos de rotação e translação, relacionando-os com a ocorrência de dias, noites e estações do ano." },
 
-      // ─── 6º ANO – MATEMÁTICA ───────────────────────────────────────────────
-      { codigo: "EF06MA01", serie: 6, area: "MA", unidade: "Números", descricao: "Comparar, ordenar, ler e escrever números naturais e números racionais cuja representação decimal é finita, fazendo uso da reta numérica." },
-      { codigo: "EF06MA03", serie: 6, area: "MA", unidade: "Números", descricao: "Resolver e elaborar problemas que envolvam cálculos (adição, subtração, multiplicação, divisão, potenciação) com números naturais." },
-      { codigo: "EF06MA07", serie: 6, area: "MA", unidade: "Números", descricao: "Compreender, comparar e ordenar frações associadas às ideias de partes de inteiros e resultado de divisão." },
-      { codigo: "EF06MA15", serie: 6, area: "MA", unidade: "Números", descricao: "Resolver e elaborar problemas que envolvam a partilha de uma quantidade em duas partes desiguais, envolvendo relações aditivas e multiplicativas." },
-      { codigo: "EF06MA24", serie: 6, area: "MA", unidade: "Grandezas e medidas", descricao: "Resolver e elaborar problemas que envolvam as grandezas comprimento, massa, tempo, temperatura, área, capacidade e volume." },
-
-      // ─── 6º ANO – LÍNGUA PORTUGUESA ───────────────────────────────────────
-      { codigo: "EF06LP01", serie: 6, area: "LP", unidade: "Leitura", descricao: "Reconhecer a impossibilidade de uma neutralidade absoluta no relato de fatos e identificar diferentes graus de parcialidade/imparcialidade em textos noticiosos." },
-      { codigo: "EF06LP04", serie: 6, area: "LP", unidade: "Análise Linguística", descricao: "Analisar a função e as flexões de substantivos e adjetivos e de verbos nos modos Indicativo, Subjuntivo e Imperativo: afirmativo e negativo." },
-      { codigo: "EF67LP28", serie: 6, area: "LP", unidade: "Leitura", descricao: "Ler, de forma autônoma, romances infanto-juvenis, contos de fadas, contos de assombração, poemas visuais, entre outros, valorizando a literatura." },
-      { codigo: "EF69LP01", serie: 6, area: "LP", unidade: "Leitura", descricao: "Diferenciar liberdade de expressão de discursos de ódio, posicionando-se contrariamente a esse tipo de discurso e vislumbrando possibilidades de denúncia." },
-
-      // ─── 6º ANO – HISTÓRIA ────────────────────────────────────────────────
-      { codigo: "EF06HI01", serie: 6, area: "HI", unidade: "História: tempo, espaço e formas de registros", descricao: "Identificar diferentes formas de compreensão da noção de tempo e de periodização dos processos históricos (continuidades e rupturas)." },
-      { codigo: "EF06HI02", serie: 6, area: "HI", unidade: "História: tempo, espaço e formas de registros", descricao: "Identificar a gênese da produção do saber histórico e analisar o significado das fontes que originaram determinadas formas de registro." },
-      { codigo: "EF06HI07", serie: 6, area: "HI", unidade: "A invenção do mundo clássico", descricao: "Identificar aspectos e formas de registro das sociedades antigas na África, no Oriente Médio e nas Américas, distinguindo alguns significados presentes na cultura material e imaterial." },
-      { codigo: "EF06HI14", serie: 6, area: "HI", unidade: "Lógicas de organização política", descricao: "Explicar a formação da Grécia Antiga, com ênfase na formação da pólis e nas transformações políticas, sociais e culturais." },
-
-      // ─── 6º ANO – GEOGRAFIA ───────────────────────────────────────────────
-      { codigo: "EF06GE01", serie: 6, area: "GE", unidade: "O sujeito e seu lugar no mundo", descricao: "Comparar modificações das paisagens nos lugares de vivência e os usos desses lugares em diferentes tempos." },
-      { codigo: "EF06GE02", serie: 6, area: "GE", unidade: "O sujeito e seu lugar no mundo", descricao: "Analisar modificações de paisagens por diferentes tipos de sociedade, com destaque para os povos originários." },
-      { codigo: "EF06GE08", serie: 6, area: "GE", unidade: "Formas de representação", descricao: "Medir distâncias na superfície pelas escalas gráficas e numéricas dos mapas." },
-      { codigo: "EF06GE11", serie: 6, area: "GE", unidade: "Natureza, ambientes e qualidade de vida", descricao: "Analisar as consequências, sobre as paisagens, das atividades humanas na bacia hidrográfica em que o município está inserido." },
-
-      // ─── 6º ANO – CIÊNCIAS ────────────────────────────────────────────────
-      { codigo: "EF06CI01", serie: 6, area: "CI", unidade: "Matéria e energia", descricao: "Classificar como homogênea ou heterogênea a mistura de dois ou mais materiais (água e sal, água e óleo, água e areia etc.)." },
-      { codigo: "EF06CI02", serie: 6, area: "CI", unidade: "Matéria e energia", descricao: "Identificar evidências de transformações químicas a partir do resultado de misturas de materiais que originam produtos diferentes dos iniciais." },
-      { codigo: "EF06CI05", serie: 6, area: "CI", unidade: "Vida e evolução", descricao: "Explicar a organização básica das células e seu papel como unidade estrutural e funcional dos seres vivos." },
-      { codigo: "EF06CI11", serie: 6, area: "CI", unidade: "Terra e Universo", descricao: "Identificar as diferentes camadas que estruturam o planeta Terra (da estrutura interna à atmosfera) e suas principais características." },
-
-      // ─── 7º ANO – MATEMÁTICA ───────────────────────────────────────────────
-      { codigo: "EF07MA01", serie: 7, area: "MA", unidade: "Números", descricao: "Resolver e elaborar problemas com números naturais, envolvendo as noções de divisor e de múltiplo, podendo incluir máximo divisor comum ou mínimo múltiplo comum." },
-      { codigo: "EF07MA04", serie: 7, area: "MA", unidade: "Números", descricao: "Resolver e elaborar problemas que envolvam operações com números inteiros." },
-      { codigo: "EF07MA13", serie: 7, area: "MA", unidade: "Álgebra", descricao: "Compreender a ideia de variável, representada por letra ou símbolo, para expressar relação entre duas grandezas, diferenciando-a da ideia de incógnita." },
-      { codigo: "EF07MA18", serie: 7, area: "MA", unidade: "Álgebra", descricao: "Resolver e elaborar problemas que possam ser representados por equações polinomiais de 1º grau, redutíveis à forma ax + b = c." },
-      { codigo: "EF07MA29", serie: 7, area: "MA", unidade: "Grandezas e medidas", descricao: "Resolver e elaborar problemas que envolvam medidas de grandezas inseridos em contextos oriundos de situações cotidianas ou de outras áreas do conhecimento." },
-
-      // ─── 7º ANO – LÍNGUA PORTUGUESA ───────────────────────────────────────
-      { codigo: "EF07LP04", serie: 7, area: "LP", unidade: "Análise Linguística", descricao: "Reconhecer, em textos, o verbo como o núcleo das orações." },
-      { codigo: "EF07LP07", serie: 7, area: "LP", unidade: "Análise Linguística", descricao: "Identificar, em textos lidos ou de produção própria, a estrutura básica da oração: sujeito, verbo, complementos." },
-      { codigo: "EF67LP08", serie: 7, area: "LP", unidade: "Leitura", descricao: "Identificar os efeitos de sentido devidos à escolha de imagens estáticas, sequenciação ou sobreposição de imagens, definição de figura/fundo e ângulo." },
-      { codigo: "EF69LP07", serie: 7, area: "LP", unidade: "Escrita", descricao: "Produzir textos em diferentes gêneros, considerando sua adequação ao contexto de produção e circulação." },
-
-      // ─── 7º ANO – HISTÓRIA ────────────────────────────────────────────────
-      { codigo: "EF07HI01", serie: 7, area: "HI", unidade: "O mundo moderno e a conexão entre sociedades", descricao: "Explicar o significado de 'modernidade' e suas lógicas de inclusão e exclusão, com base em uma concepção europeia." },
-      { codigo: "EF07HI02", serie: 7, area: "HI", unidade: "O mundo moderno e a conexão entre sociedades", descricao: "Identificar conexões e interações entre as sociedades do Novo Mundo, da Europa, da África e da Ásia no contexto das navegações." },
-      { codigo: "EF07HI10", serie: 7, area: "HI", unidade: "A organização do poder", descricao: "Analisar as lógicas mercantis e o domínio europeu sobre os mares e o contraponto Oriental." },
-      { codigo: "EF07HI13", serie: 7, area: "HI", unidade: "A emergência do capitalismo", descricao: "Caracterizar a ação dos europeus e suas lógicas mercantis visando ao domínio no mundo atlântico." },
-
-      // ─── 7º ANO – GEOGRAFIA ───────────────────────────────────────────────
-      { codigo: "EF07GE01", serie: 7, area: "GE", unidade: "O sujeito e seu lugar no mundo", descricao: "Avaliar, por meio de exemplos extraídos dos meios de comunicação, ideias e estereótipos acerca das paisagens e da formação territorial do Brasil." },
-      { codigo: "EF07GE02", serie: 7, area: "GE", unidade: "O sujeito e seu lugar no mundo", descricao: "Analisar a influência dos fluxos econômicos e populacionais na formação socioespacial do Brasil." },
-      { codigo: "EF07GE06", serie: 7, area: "GE", unidade: "Conexões e escalas", descricao: "Discutir em que medida a produção, a circulação e o consumo de mercadorias provocam impactos ambientais e influem na distribuição de riquezas." },
-      { codigo: "EF07GE09", serie: 7, area: "GE", unidade: "Formas de representação", descricao: "Interpretar e elaborar mapas temáticos e históricos, inclusive utilizando tecnologias digitais, com informações demográficas e econômicas." },
-
-      // ─── 7º ANO – CIÊNCIAS ────────────────────────────────────────────────
-      { codigo: "EF07CI01", serie: 7, area: "CI", unidade: "Matéria e energia", descricao: "Discutir a aplicação, ao longo da história, das máquinas simples e propor soluções e invenções para a realização de tarefas mecânicas cotidianas." },
-      { codigo: "EF07CI02", serie: 7, area: "CI", unidade: "Matéria e energia", descricao: "Diferenciar temperatura, calor e sensação térmica nas diferentes situações de equilíbrio termodinâmico cotidianas." },
-      { codigo: "EF07CI07", serie: 7, area: "CI", unidade: "Vida e evolução", descricao: "Caracterizar os principais ecossistemas brasileiros quanto à paisagem, à quantidade de água, ao tipo de solo, à disponibilidade de luz solar e à temperatura." },
-      { codigo: "EF07CI12", serie: 7, area: "CI", unidade: "Terra e Universo", descricao: "Demonstrar que o ar é uma mistura de gases, identificando sua composição, e discutir fenômenos como a inversão térmica e destruição da camada de ozônio." }
     ],
     skipDuplicates: true,
   })
