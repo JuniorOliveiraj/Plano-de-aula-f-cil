@@ -1,6 +1,7 @@
 "use client"
 
-import React from "react"
+import React, { useEffect, Suspense } from "react"
+import { useSearchParams } from "next/navigation"
 import { useWizardStore, getPassoMaximo } from "@/store/wizardStore"
 import Stepper from "@/components/wizard/Stepper"
 import PassoEscolhaModo from "@/components/wizard/PassoEscolhaModo"
@@ -34,9 +35,26 @@ const PASSOS_SEM_PDF: Record<number, React.ComponentType> = {
   8: PassoRevisao,
 }
 
-export default function NovoPlanoPage() {
+function NovoPlanoContent() {
+  const searchParams = useSearchParams()
   const passo = useWizardStore((s) => s.passo)
   const modo = useWizardStore((s) => s.modo)
+  const setDataAula = useWizardStore((s) => s.setDataAula)
+  const setTipo = useWizardStore((s) => s.setTipo)
+  const setModo = useWizardStore((s) => s.setModo)
+
+  useEffect(() => {
+    const dataParam = searchParams.get("data")
+    if (dataParam) {
+      // Converter de DD-MM-AAAA para DD/MM/AAAA
+      const dataFormatada = dataParam.replace(/-/g, "/")
+      setDataAula(dataFormatada)
+      setTipo("AULA_UNICA")
+      // Pré-selecionar modo SEM_PDF e avançar para o passo 2
+      setModo("SEM_PDF")
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const mapaAtual = modo === "SEM_PDF" ? PASSOS_SEM_PDF : PASSOS_COM_PDF
   const PassoAtual = mapaAtual[passo]
@@ -65,6 +83,13 @@ export default function NovoPlanoPage() {
         {PassoAtual && <PassoAtual />}
       </div>
     </div>
+  )
+}
 
+export default function NovoPlanoPage() {
+  return (
+    <Suspense fallback={null}>
+      <NovoPlanoContent />
+    </Suspense>
   )
 }

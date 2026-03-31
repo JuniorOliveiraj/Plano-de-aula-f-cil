@@ -26,6 +26,7 @@ model User {
   asaasSubscriptionId  String?      // ID da assinatura na Asaas — NUNCA exposto ao frontend
   accounts             Account[]
   planos               Plano[]
+  planosCalendario     PlanoCalendario[]
   escola               Escola?      @relation(fields: [escolaId], references: [id])
   usageLogs            UsageLog[]
   assinatura           Assinatura?
@@ -132,13 +133,14 @@ enum FuncionalidadeTipo {
 }
 
 model BnccHabilidade {
-  id        Int      @id @default(autoincrement())
-  codigo    String   @unique
-  descricao String
-  serie     Int
-  area      String
-  unidade   String?
-  createdAt DateTime @default(now())
+  id               Int               @id @default(autoincrement())
+  codigo           String            @unique
+  descricao        String
+  serie            Int
+  area             String
+  unidade          String?
+  createdAt        DateTime          @default(now())
+  planosCalendario PlanoCalendario[]
 
   @@index([serie, area])
 }
@@ -168,4 +170,23 @@ model UsageLog {
   user           User               @relation(fields: [userId], references: [id])
 
   @@unique([userId, funcionalidade, mes, ano])
+}
+
+model PlanoCalendario {
+  id               String          @id @default(cuid())
+  userId           String
+  serie            String
+  materia          String
+  tipo             TipoPlano
+  mesReferencia    String?
+  bnccHabilidadeId Int?
+  jsonData         Json
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  user             User            @relation(fields: [userId], references: [id])
+  bnccHabilidade   BnccHabilidade? @relation(fields: [bnccHabilidadeId], references: [id])
+
+  @@index([userId, mesReferencia])
+  @@index([userId])
 }

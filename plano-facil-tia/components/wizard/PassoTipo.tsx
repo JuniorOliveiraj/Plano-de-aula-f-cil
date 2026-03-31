@@ -1,13 +1,209 @@
 "use client"
 
+import { useState, useRef, useEffect } from "react"
 import { useWizardStore } from "@/store/wizardStore"
 
+// ── Mini date picker personalizado ──────────────────────────────
+const MESES = [
+  "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
+  "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro",
+]
+const DIAS_SEMANA = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"]
+
+function formatarDDMMAAAA(date: Date): string {
+  const d = String(date.getDate()).padStart(2,"0")
+  const m = String(date.getMonth()+1).padStart(2,"0")
+  return `${d}/${m}/${date.getFullYear()}`
+}
+
+function parseDDMMAAAA(str: string): Date | null {
+  const parts = str.split("/")
+  if (parts.length !== 3) return null
+  const [d, m, y] = parts.map(Number)
+  const date = new Date(y, m-1, d)
+  if (date.getFullYear()===y && date.getMonth()===m-1 && date.getDate()===d) return date
+  return null
+}
+
+interface DatePickerProps {
+  value: string
+  onChange: (v: string) => void
+}
+
+function DatePicker({ value, onChange }: DatePickerProps) {
+  const hoje = new Date(); hoje.setHours(0,0,0,0)
+  const inicial = parseDDMMAAAA(value) ?? hoje
+  const [aberto, setAberto] = useState(false)
+  const [mes, setMes] = useState(inicial.getMonth())
+  const [ano, setAno] = useState(inicial.getFullYear())
+  const ref = useRef<HTMLDivElement>(null)
+
+  // fechar ao clicar fora
+  useEffect(() => {
+    if (!aberto) return
+    function handler(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setAberto(false)
+    }
+    document.addEventListener("mousedown", handler)
+    return () => document.removeEventListener("mousedown", handler)
+  }, [aberto])
+
+  const totalDias = new Date(ano, mes+1, 0).getDate()
+  const primeiroDia = new Date(ano, mes, 1).getDay()
+  const celulas: (number|null)[] = [
+    ...Array(primeiroDia).fill(null),
+    ...Array.from({length: totalDias}, (_,i) => i+1),
+  ]
+  while (celulas.length % 7 !== 0) celulas.push(null)
+
+  const selecionado = parseDDMMAAAA(value)
+
+  function selecionar(dia: number) {
+    const d = new Date(ano, mes, dia)
+    onChange(formatarDDMMAAAA(d))
+    setAberto(false)
+  }
+
+  function navMes(delta: number) {
+    let nm = mes + delta
+    let na = ano
+    if (nm < 0) { nm = 11; na-- }
+    if (nm > 11) { nm = 0; na++ }
+    setMes(nm); setAno(na)
+  }
+
+  const isPast = (dia: number) => new Date(ano, mes, dia) < hoje
+  const isHoje = (dia: number) => {
+    const h = new Date(); return dia===h.getDate() && mes===h.getMonth() && ano===h.getFullYear()
+  }
+  const isSel = (dia: number) =>
+    selecionado && dia===selecionado.getDate() && mes===selecionado.getMonth() && ano===selecionado.getFullYear()
+
+  return (
+    <div ref={ref} className="relative">
+      {/* Input com ícone */}
+      <button
+        type="button"
+        onClick={() => setAberto(v => !v)}
+        className="w-full h-11 rounded-xl px-3 flex items-center justify-between text-sm transition-colors"
+        style={{
+          backgroundColor: "var(--ds-surface-card)",
+          border: `1px solid ${aberto ? "var(--ds-primary-bright)" : "var(--ds-border)"}`,
+          color: value ? "var(--ds-on-surface)" : "var(--ds-muted)",
+          outline: aberto ? "2px solid var(--ds-primary-bright)" : "none",
+          outlineOffset: 1,
+        }}
+      >
+        <span>{value || "Selecione uma data"}</span>
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" style={{color:"var(--ds-muted)",flexShrink:0}}>
+          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+          <path d="M16 2v4M8 2v4M3 10h18"/>
+        </svg>
+      </button>
+
+      {/* Calendário dropdown */}
+      {aberto && (
+        <div
+          className="absolute left-0 z-50 mt-2 rounded-2xl p-4 select-none"
+          style={{
+            backgroundColor: "var(--ds-surface-card)",
+            border: "1px solid var(--ds-border)",
+            boxShadow: "0 8px 32px var(--ds-shadow-lg)",
+            minWidth: 280,
+          }}
+        >
+          {/* Cabeçalho navegação */}
+          <div className="flex items-center justify-between mb-3">
+            <button type="button" onClick={() => navMes(-1)}
+              className="w-7 h-7 flex items-center justify-center rounded-lg transition-colors"
+              style={{backgroundColor:"var(--ds-surface-low)",color:"var(--ds-on-surface)"}}
+              onMouseEnter={e=>{e.currentTarget.style.backgroundColor="var(--ds-border)"}}
+              onMouseLeave={e=>{e.currentTarget.style.backgroundColor="var(--ds-surface-low)"}}
+            >
+              <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <span className="text-[14px] font-600" style={{color:"var(--ds-on-surface)"}}>
+              {MESES[mes]} {ano}
+            </span>
+            <button type="button" onClick={() => navMes(1)}
+              className="w-7 h-7 flex items-center justify-center rounded-lg transition-colors"
+              style={{backgroundColor:"var(--ds-surface-low)",color:"var(--ds-on-surface)"}}
+              onMouseEnter={e=>{e.currentTarget.style.backgroundColor="var(--ds-border)"}}
+              onMouseLeave={e=>{e.currentTarget.style.backgroundColor="var(--ds-surface-low)"}}
+            >
+              <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+
+          {/* Dias da semana */}
+          <div className="grid grid-cols-7 mb-1">
+            {DIAS_SEMANA.map(d => (
+              <div key={d} className="text-center text-[10px] font-700 uppercase py-1" style={{color:"var(--ds-muted)"}}>
+                {d}
+              </div>
+            ))}
+          </div>
+
+          {/* Grade de dias */}
+          <div className="grid grid-cols-7 gap-0.5">
+            {celulas.map((dia, idx) => {
+              if (!dia) return <div key={`e-${idx}`} />
+              const passado = isPast(dia)
+              const hoje_ = isHoje(dia)
+              const sel = isSel(dia)
+              return (
+                <button
+                  key={dia}
+                  type="button"
+                  disabled={passado}
+                  onClick={() => selecionar(dia)}
+                  className="h-8 w-full rounded-lg text-[13px] font-500 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                  style={{
+                    backgroundColor: sel
+                      ? "var(--ds-primary-bright)"
+                      : hoje_
+                        ? "var(--ds-surface-low)"
+                        : "transparent",
+                    color: sel ? "#fff" : hoje_ ? "var(--ds-primary-bright)" : "var(--ds-on-surface)",
+                    fontWeight: sel || hoje_ ? 700 : 500,
+                    outline: hoje_ && !sel ? "1px solid var(--ds-primary-bright)" : "none",
+                  }}
+                  onMouseEnter={e => { if (!sel && !passado) e.currentTarget.style.backgroundColor="var(--ds-surface-low)" }}
+                  onMouseLeave={e => { if (!sel) e.currentTarget.style.backgroundColor = hoje_ ? "var(--ds-surface-low)" : "transparent" }}
+                >
+                  {dia}
+                </button>
+              )
+            })}
+          </div>
+
+          {/* Botão Hoje */}
+          <div className="mt-3 pt-3" style={{borderTop:"1px solid var(--ds-border)"}}>
+            <button
+              type="button"
+              onClick={() => { onChange(formatarDDMMAAAA(hoje)); setAberto(false) }}
+              className="w-full h-8 rounded-lg text-[12px] font-600 transition-colors"
+              style={{backgroundColor:"var(--ds-surface-low)",color:"var(--ds-on-surface)"}}
+              onMouseEnter={e=>{e.currentTarget.style.backgroundColor="var(--ds-border)"}}
+              onMouseLeave={e=>{e.currentTarget.style.backgroundColor="var(--ds-surface-low)"}}
+            >
+              Hoje
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ── Componente principal ─────────────────────────────────────────
 export default function PassoTipo() {
-  const { tipo, setTipo, pagDe, pagAte, setPaginas, avancar, voltar } = useWizardStore()
+  const { tipo, setTipo, pagDe, pagAte, setPaginas, avancar, voltar, dataAula, setDataAula, modo } = useWizardStore()
 
   const podeAvancar =
     tipo === "MENSAL" ||
-    (tipo === "AULA_UNICA" &&
+    (tipo === "AULA_UNICA" && modo === "SEM_PDF" && dataAula.length === 10) ||
+    (tipo === "AULA_UNICA" && modo !== "SEM_PDF" &&
       ((!pagDe && !pagAte) || (pagDe && pagAte && !isNaN(Number(pagDe)) && !isNaN(Number(pagAte)))))
 
   return (
@@ -44,8 +240,28 @@ export default function PassoTipo() {
         </button>
       </div>
 
-      {/* Campo de páginas — só para aula única */}
-      {tipo === "AULA_UNICA" && (
+      {/* Date picker — aula única no modo SEM_PDF */}
+      {tipo === "AULA_UNICA" && modo === "SEM_PDF" && (
+        <div className="rounded-2xl p-4 mb-6" style={{ backgroundColor: "var(--ds-surface)" }}>
+          <p className="text-sm font-medium mb-3" style={{ color: "var(--ds-terracotta)" }}>
+            Data da aula <span style={{ color: "var(--ds-ink-error)" }}>*</span>
+          </p>
+          <DatePicker value={dataAula} onChange={setDataAula} />
+          {!dataAula && (
+            <p className="text-[12px] mt-2" style={{ color: "var(--ds-muted)" }}>
+              Selecione a data para continuar
+            </p>
+          )}
+          {dataAula && (
+            <p className="text-[12px] mt-2" style={{ color: "var(--ds-muted)" }}>
+              📅 Você pode alterar a data se quiser.
+            </p>
+          )}
+        </div>
+      )}
+
+      {/* Campo de páginas — aula única no modo COM_PDF */}
+      {tipo === "AULA_UNICA" && modo !== "SEM_PDF" && (
         <div className="rounded-2xl p-4 mb-6" style={{ backgroundColor: "var(--ds-surface)" }}>
           <p className="text-sm font-medium mb-3" style={{ color: "var(--ds-terracotta)" }}>
             Páginas do PDF (opcional)
@@ -63,7 +279,7 @@ export default function PassoTipo() {
                 style={{
                   backgroundColor: "var(--ds-surface-card)",
                   border: "1px solid var(--ds-border)",
-                  color: "var(--ds-on-surface)"
+                  color: "var(--ds-on-surface)",
                 }}
               />
             </div>
@@ -80,7 +296,7 @@ export default function PassoTipo() {
                 style={{
                   backgroundColor: "var(--ds-surface-card)",
                   border: "1px solid var(--ds-border)",
-                  color: "var(--ds-on-surface)"
+                  color: "var(--ds-on-surface)",
                 }}
               />
             </div>
@@ -108,4 +324,3 @@ export default function PassoTipo() {
     </div>
   )
 }
-

@@ -57,7 +57,7 @@ export default function PassoRevisao() {
   const router = useRouter()
   const {
     serie, materia, tipo, pagDe, pagAte, pdfFile, voltar, resetar,
-    modo, tema, codigoBncc, descricaoBncc, duracao,
+    modo, tema, codigoBncc, descricaoBncc, duracao, dataAula,
   } = useWizardStore()
 
   const [gerando, setGerando] = useState(false)
@@ -141,11 +141,23 @@ export default function PassoRevisao() {
         // Etapa 1 — IA processando (avança após 3s do envio)
         timerRef.current = setTimeout(() => avancarEtapa(1), 3000)
 
-        const res = await fetch("/api/gerar-plano", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ serie, materia, tipo, tema, codigoBncc, descricaoBncc, duracao }),
-        })
+        // Se veio do calendário (dataAula preenchido), usar a API do calendário
+        const veioDoCal = Boolean(dataAula)
+
+        let res: Response
+        if (veioDoCal) {
+          res = await fetch("/api/calendario/planos", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ serie, materia, tipo, tema, codigoBncc, descricaoBncc, duracao, dataAula }),
+          })
+        } else {
+          res = await fetch("/api/gerar-plano", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ serie, materia, tipo, tema, codigoBncc, descricaoBncc, duracao }),
+          })
+        }
 
         console.log("[PassoRevisao/SEM_PDF] resposta recebida", res.status)
         const data = await res.json()
@@ -166,7 +178,12 @@ export default function PassoRevisao() {
         setProgresso(100)
         await new Promise((r) => setTimeout(r, 400))
         resetar()
-        router.push(`/dashboard/plano/resultado/${data.planoId}`)
+
+        if (veioDoCal) {
+          router.push("/dashboard/calendario")
+        } else {
+          router.push(`/dashboard/plano/resultado/${data.planoId}`)
+        }
       } else {
         // ── Fluxo COM_PDF (comportamento original) ─────────────
         if (!pdfFile) return
@@ -319,6 +336,7 @@ export default function PassoRevisao() {
       { label: "Série", value: serie },
       { label: "Matéria", value: materia },
       { label: "Tipo", value: tipoLabel },
+      ...(tipo === "AULA_UNICA" && dataAula ? [{ label: "Data da aula", value: dataAula }] : []),
       { label: "Tema", value: tema },
       { label: "Código BNCC", value: codigoBncc || "—" },
       { label: "Duração", value: `${duracao} minutos` },

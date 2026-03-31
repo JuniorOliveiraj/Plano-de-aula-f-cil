@@ -8,8 +8,9 @@ export function isValidTema(v: string): boolean {
 }
 
 export default function PassoTema() {
-  const { tema, setTema, avancar, voltar } = useWizardStore()
+  const { tema, setTema, nomeAula, setNomeAula, avancar, voltar } = useWizardStore()
   const [valor, setValor] = useState(tema)
+  const [nomeValor, setNomeValor] = useState(nomeAula)
   const [erro, setErro] = useState<string | null>(null)
 
   function handleProximo() {
@@ -19,6 +20,7 @@ export default function PassoTema() {
     }
     setErro(null)
     setTema(valor.trim())
+    setNomeAula(nomeValor.trim())
     avancar()
   }
 
@@ -28,6 +30,35 @@ export default function PassoTema() {
         Qual é o tema da aula?
       </h2>
 
+      {erro && (
+        <p className="text-sm mt-2" style={{ color: "var(--ds-ink-error)" }}>{erro}</p>
+      )}
+
+      {/* Nome da aula — opcional */}
+      <div className="mt-5">
+        <label className="block text-sm font-medium mb-2" style={{ color: "var(--ds-on-surface)" }}>
+          Nome da aula <span className="text-[12px] font-400" style={{ color: "var(--ds-muted)" }}>(opcional)</span>
+        </label>
+        <input
+          type="text"
+          value={nomeValor}
+          onChange={(e) => setNomeValor(e.target.value)}
+          maxLength={80}
+          placeholder="Ex: Aula 1 — Introdução às Frações"
+          className="w-full h-11 px-4 outline-none transition"
+          style={{
+            backgroundColor: "var(--ds-surface-low)",
+            border: "1px solid var(--ds-border)",
+            borderRadius: "14px",
+            color: "var(--ds-on-surface)",
+          }}
+        />
+        <p className="text-[12px] mt-1" style={{ color: "var(--ds-muted)" }}>
+          Se não preencher, a IA vai nomear automaticamente.
+        </p>
+      </div>
+
+      <br/>
       <textarea
         value={valor}
         onChange={(e) => {
@@ -51,9 +82,7 @@ export default function PassoTema() {
         {valor.length}/200
       </p>
 
-      {erro && (
-        <p className="text-sm mt-2" style={{ color: "var(--ds-ink-error)" }}>{erro}</p>
-      )}
+      
 
       <div className="flex gap-3 mt-6">
         <button

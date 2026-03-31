@@ -34,7 +34,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="pt-BR" className={jakartaSans.variable}>
+    <html lang="pt-BR" className={jakartaSans.variable} suppressHydrationWarning>
       <head>
         {/* Script anti-flash — deve ser o primeiro script executado */}
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />

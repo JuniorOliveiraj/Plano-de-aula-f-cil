@@ -24,6 +24,11 @@ interface WizardState {
   descricaoBncc: string
   duracao: 45 | 90
 
+  // campo de data para integração com calendário
+  dataAula: string
+  // nome personalizado da aula (opcional)
+  nomeAula: string
+
   // actions existentes
   setSerie: (v: string) => void
   setMateria: (v: string) => void
@@ -39,6 +44,8 @@ interface WizardState {
   setTema: (v: string) => void
   setCodigoBncc: (codigo: string, descricao: string) => void
   setDuracao: (v: 45 | 90) => void
+  setDataAula: (v: string) => void
+  setNomeAula: (v: string) => void
 }
 
 export const useWizardStore = create<WizardState>((set) => ({
@@ -57,6 +64,7 @@ export const useWizardStore = create<WizardState>((set) => ({
   codigoBncc: "",
   descricaoBncc: "",
   duracao: 45,
+  dataAula: "",
 
   // actions existentes
   setSerie: (v) => set({ serie: v }),
@@ -81,6 +89,8 @@ export const useWizardStore = create<WizardState>((set) => ({
       codigoBncc: "",
       descricaoBncc: "",
       duracao: 45,
+      dataAula: "",
+      nomeAula: "",
     }),
 
   // novas actions
@@ -89,4 +99,6 @@ export const useWizardStore = create<WizardState>((set) => ({
   setCodigoBncc: (codigo, descricao) =>
     set({ codigoBncc: codigo, descricaoBncc: descricao }),
   setDuracao: (v) => set({ duracao: v }),
+  setDataAula: (v) => set({ dataAula: v }),
+  setNomeAula: (v) => set({ nomeAula: v }),
 }))
