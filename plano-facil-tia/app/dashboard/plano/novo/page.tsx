@@ -45,19 +45,26 @@ export default function NovoPlanoPage() {
   return (
     <div className="max-w-3xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-[28px] font-700 text-[#2f1402] leading-tight">
+        <h1 className="text-[28px] font-700 leading-tight" style={{ color: "var(--ds-on-surface)" }}>
           Criar Novo Plano
         </h1>
-        <p className="text-[14px] text-[#a87b5e] mt-1">
+        <p className="text-[14px] mt-1" style={{ color: "var(--ds-muted)" }}>
           Passo {passo} de {passoMaximo}
         </p>
       </div>
 
       <Stepper />
 
-      <div className="mt-8 bg-white rounded-[2rem] p-8 shadow-[0_24px_48px_rgba(144,77,0,0.06)]">
+      <div
+        className="mt-8 rounded-[2rem] p-8"
+        style={{
+          backgroundColor: "var(--ds-surface-card)",
+          boxShadow: "0 24px 48px var(--ds-shadow-lg)",
+        }}
+      >
         {PassoAtual && <PassoAtual />}
       </div>
     </div>
+
   )
 }

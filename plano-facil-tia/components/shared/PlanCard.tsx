@@ -25,7 +25,9 @@ export default function PlanCard({ planoId, materia, serie, tipo, dataCriacao }:
   const router = useRouter()
   const emoji = materiaEmoji[materia] ?? "📄"
   const tipoLabel = tipo === "MENSAL" ? "Plano Mensal" : "Aula Única"
-  const tipoColor = tipo === "MENSAL" ? { color: "#904d00", bg: "#fff1ea" } : { color: "#2e7d32", bg: "#edf7ee" }
+  const tipoColor = tipo === "MENSAL"
+    ? { color: "var(--ds-tipo-mensal-color)", bg: "var(--ds-tipo-mensal-bg)" }
+    : { color: "var(--ds-tipo-aula-color)",   bg: "var(--ds-tipo-aula-bg)" }
 
   const [menuAberto, setMenuAberto] = useState(false)
   const [baixando, setBaixando] = useState(false)
@@ -65,18 +67,18 @@ export default function PlanCard({ planoId, materia, serie, tipo, dataCriacao }:
     <div
       className="flex flex-col gap-4 p-5 rounded-[20px] transition-all duration-200"
       style={{
-        backgroundColor: "#ffffff",
-        boxShadow: "0 4px 20px rgba(144,77,0,0.06)",
-        border: "1px solid #fff1ea",
+        backgroundColor: "var(--ds-surface-card)",
+        boxShadow: "0 4px 20px var(--ds-shadow)",
+        border: "1px solid var(--ds-surface-low)",
       }}
       onMouseEnter={(e) => {
         const el = e.currentTarget as HTMLDivElement
-        el.style.boxShadow = "0 8px 32px rgba(144,77,0,0.12)"
+        el.style.boxShadow = "0 8px 32px var(--ds-shadow-lg)"
         el.style.transform = "translateY(-2px)"
       }}
       onMouseLeave={(e) => {
         const el = e.currentTarget as HTMLDivElement
-        el.style.boxShadow = "0 4px 20px rgba(144,77,0,0.06)"
+        el.style.boxShadow = "0 4px 20px var(--ds-shadow)"
         el.style.transform = "translateY(0)"
       }}
     >
@@ -84,13 +86,13 @@ export default function PlanCard({ planoId, materia, serie, tipo, dataCriacao }:
       <div className="flex items-start gap-3">
         <div
           className="flex items-center justify-center text-xl rounded-[12px] shrink-0"
-          style={{ width: 44, height: 44, backgroundColor: "#fff1ea" }}
+          style={{ width: 44, height: 44, backgroundColor: "var(--ds-surface-low)" }}
         >
           {emoji}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-[15px] font-600 text-[#2f1402] truncate">{materia}</p>
-          <p className="text-[13px] text-[#7c4a2d]">{serie}</p>
+          <p className="text-[15px] font-600 truncate" style={{ color: "var(--ds-on-surface)" }}>{materia}</p>
+          <p className="text-[13px]" style={{ color: "var(--ds-terracotta)" }}>{serie}</p>
         </div>
       </div>
 
@@ -102,7 +104,7 @@ export default function PlanCard({ planoId, materia, serie, tipo, dataCriacao }:
         >
           {tipoLabel}
         </span>
-        <span className="text-[12px] text-[#a87b5e]">{dataCriacao}</span>
+        <span className="text-[12px]" style={{ color: "var(--ds-muted)" }}>{dataCriacao}</span>
       </div>
 
       {/* Botões */}
@@ -162,34 +164,36 @@ export default function PlanCard({ planoId, materia, serie, tipo, dataCriacao }:
             <div
               className="absolute left-0 right-0 mt-1.5 rounded-[12px] overflow-hidden z-50"
               style={{
-                backgroundColor: "#ffffff",
-                boxShadow: "0 8px 24px rgba(144,77,0,0.15)",
-                border: "1px solid #f0ddd0",
+                backgroundColor: "var(--ds-surface-card)",
+                boxShadow: "0 8px 24px var(--ds-shadow-lg)",
+                border: "1px solid var(--ds-border)",
               }}
             >
               <button
                 onClick={() => handleDownload("word")}
-                className="w-full flex items-center gap-3 px-4 py-3 text-left text-[13px] font-500 text-[#2f1402] transition-colors"
-                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#fff8f5" }}
+                className="w-full flex items-center gap-3 px-4 py-3 text-left text-[13px] font-500 transition-colors"
+                style={{ color: "var(--ds-on-surface)" }}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "var(--ds-surface-low)" }}
                 onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent" }}
               >
                 <span className="text-lg">📝</span>
                 <div>
-                  <p className="font-600 text-[#2f1402]">Word (.docx)</p>
-                  <p className="text-[11px] text-[#a87b5e]">Edite no Word ou Google Docs</p>
+                  <p className="font-600" style={{ color: "var(--ds-on-surface)" }}>Word (.docx)</p>
+                  <p className="text-[11px]" style={{ color: "var(--ds-muted)" }}>Edite no Word ou Google Docs</p>
                 </div>
               </button>
-              <div style={{ height: 1, backgroundColor: "#f0ddd0", margin: "0 12px" }} />
+              <div style={{ height: 1, backgroundColor: "var(--ds-border)", margin: "0 12px" }} />
               <button
                 onClick={() => handleDownload("pdf")}
-                className="w-full flex items-center gap-3 px-4 py-3 text-left text-[13px] font-500 text-[#2f1402] transition-colors"
-                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#fff8f5" }}
+                className="w-full flex items-center gap-3 px-4 py-3 text-left text-[13px] font-500 transition-colors"
+                style={{ color: "var(--ds-on-surface)" }}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "var(--ds-surface-low)" }}
                 onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent" }}
               >
                 <span className="text-lg">📄</span>
                 <div>
-                  <p className="font-600 text-[#2f1402]">PDF</p>
-                  <p className="text-[11px] text-[#a87b5e]">Pronto pra imprimir ou compartilhar</p>
+                  <p className="font-600" style={{ color: "var(--ds-on-surface)" }}>PDF</p>
+                  <p className="text-[11px]" style={{ color: "var(--ds-muted)" }}>Pronto pra imprimir ou compartilhar</p>
                 </div>
               </button>
             </div>
@@ -199,9 +203,13 @@ export default function PlanCard({ planoId, materia, serie, tipo, dataCriacao }:
         <button
           onClick={() => router.push(`/dashboard/plano/resultado/${planoId}`)}
           className="flex items-center justify-center gap-1.5 h-10 px-4 rounded-[10px] text-[13px] font-500 transition-colors duration-150"
-          style={{ backgroundColor: "#fff1ea", color: "#7c4a2d", border: "1px solid #f0ddd0" }}
-          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#ffeade" }}
-          onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "#fff1ea" }}
+          style={{
+            backgroundColor: "var(--ds-surface-low)",
+            color: "var(--ds-terracotta)",
+            border: "1px solid var(--ds-border)",
+          }}
+          onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "var(--ds-surface-container)" }}
+          onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "var(--ds-surface-low)" }}
         >
           Ver
         </button>

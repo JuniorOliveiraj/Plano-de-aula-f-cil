@@ -9,7 +9,7 @@ export default function PassoSerie() {
 
   return (
     <div>
-      <h2 className="text-xl font-medium text-[#7c4a2d] mb-6">
+      <h2 className="text-xl font-medium mb-6" style={{ color: "var(--ds-terracotta)" }}>
         Escolha a série
       </h2>
 
@@ -18,11 +18,12 @@ export default function PassoSerie() {
           <button
             key={s}
             onClick={() => setSerie(s)}
-            className={`h-16 rounded-2xl text-base font-medium transition ${
-              serie === s
-                ? "bg-[#fff1ea] ring-2 ring-[#ff8c00] text-[#2f1402]"
-                : "bg-[#fff8f5] text-[#564334]"
-            }`}
+            className="h-16 rounded-2xl text-base font-medium transition"
+            style={{
+              backgroundColor: serie === s ? "var(--ds-surface-low)" : "var(--ds-surface)",
+              outline: serie === s ? "2px solid var(--ds-primary-bright)" : "none",
+              color: serie === s ? "var(--ds-on-surface)" : "var(--ds-on-surface-var)",
+            }}
           >
             {s}
           </button>
@@ -32,10 +33,12 @@ export default function PassoSerie() {
       <button
         disabled={!serie}
         onClick={avancar}
-        className="w-full h-14 rounded-[14px] bg-gradient-to-br from-[#904d00] to-[#ff8c00] text-white font-semibold disabled:opacity-60"
+        className="w-full h-14 rounded-[14px] text-white font-semibold disabled:opacity-60 transition-opacity hover:opacity-90"
+        style={{ background: "linear-gradient(135deg,#904d00,#ff8c00)" }}
       >
         Próximo
       </button>
     </div>
   )
 }
+

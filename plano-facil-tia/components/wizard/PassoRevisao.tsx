@@ -1,33 +1,34 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { PDFDocument } from "pdf-lib"
 import { useWizardStore } from "@/store/wizardStore"
 
 const ERROS: Record<string, string> = {
-  TRIAL_EXPIRADO:   "Seu período gratuito acabou. Assine para continuar gerando planos!",
-  LIMITE_TRIAL:     "Você usou todos os planos do trial. Assine para continuar!",
-  LIMITE_MENSAL:    "Você usou todos os planos do mês. Aguarde a renovação.",
-  LIMITE_DIARIO:    "Você já gerou 5 planos hoje. Volta amanhã para continuar!",
-  FALHA_GERACAO:    "Algo deu errado. Clica em 'Tentar novamente' que a gente resolve!",
-  PDF_INVALIDO:     "Não consegui abrir esse PDF. Tenta outro arquivo.",
+  TRIAL_EXPIRADO: "Seu período gratuito acabou. Assine para continuar gerando planos!",
+  LIMITE_TRIAL: "Você usou todos os planos do trial. Assine para continuar!",
+  LIMITE_MENSAL: "Você usou todos os planos do mês. Aguarde a renovação.",
+  LIMITE_DIARIO: "Você já gerou 5 planos hoje. Volta amanhã para continuar!",
+  FALHA_GERACAO: "Algo deu errado. Clica em 'Tentar novamente' que a gente resolve!",
+  PDF_INVALIDO: "Não consegui abrir esse PDF. Tenta outro arquivo.",
   PDF_MUITO_GRANDE: "Arquivo muito grande, tia. Use um PDF de até 20MB.",
 }
 
 // Etapas COM_PDF — comportamento original (soma = 100)
 const ETAPAS = [
-  { label: "Preparando o PDF",   peso: 10,  duracao: 3000  },
-  { label: "Enviando para a IA", peso: 20,  duracao: 8000  },
-  { label: "Criando as aulas",   peso: 55,  duracao: 90000 },
-  { label: "Montando o Word",    peso: 15,  duracao: 5000  },
+  { label: "Preparando o PDF", peso: 10, duracao: 3000 },
+  { label: "Enviando para a IA", peso: 20, duracao: 8000 },
+  { label: "Criando as aulas", peso: 55, duracao: 90000 },
+  { label: "Montando o Word", peso: 15, duracao: 5000 },
 ]
 
 // Etapas SEM_PDF — sem "Preparando o PDF" (soma = 100)
 const ETAPAS_SEM_PDF = [
-  { label: "Enviando para a IA", peso: 25,  duracao: 8000  },
-  { label: "Criando as aulas",   peso: 60,  duracao: 90000 },
-  { label: "Montando o Word",    peso: 15,  duracao: 5000  },
+  { label: "Enviando para a IA", peso: 25, duracao: 8000 },
+  { label: "Criando as aulas", peso: 60, duracao: 90000 },
+  { label: "Montando o Word", peso: 15, duracao: 5000 },
 ]
 
 // Timeout total: 3 minutos
@@ -38,7 +39,7 @@ async function cortarPdf(file: File, pagDe: string, pagAte: string): Promise<Fil
   const pdfOriginal = await PDFDocument.load(arrayBuffer)
   const totalPaginas = pdfOriginal.getPageCount()
   const inicio = Math.max(1, parseInt(pagDe) || 1)
-  const fim    = Math.min(totalPaginas, parseInt(pagAte) || totalPaginas)
+  const fim = Math.min(totalPaginas, parseInt(pagAte) || totalPaginas)
   const indices = Array.from({ length: fim - inicio + 1 }, (_, i) => inicio - 1 + i)
   const pdfCortado = await PDFDocument.create()
   const paginas = await pdfCortado.copyPages(pdfOriginal, indices)
@@ -59,24 +60,25 @@ export default function PassoRevisao() {
     modo, tema, codigoBncc, descricaoBncc, duracao,
   } = useWizardStore()
 
-  const [gerando, setGerando]       = useState(false)
-  const [etapaIdx, setEtapaIdx]     = useState(0)
-  const [progresso, setProgresso]   = useState(0)
-  const [erro, setErro]             = useState<string | null>(null)
-  const [tempoDecorrido, setTempo]  = useState(0)
+  const [gerando, setGerando] = useState(false)
+  const [etapaIdx, setEtapaIdx] = useState(0)
+  const [progresso, setProgresso] = useState(0)
+  const [erro, setErro] = useState<string | null>(null)
+  const [erroCode, setErroCode] = useState<string | null>(null)
+  const [tempoDecorrido, setTempo] = useState(0)
 
-  const timerRef    = useRef<ReturnType<typeof setInterval> | null>(null)
-  const timeoutRef  = useRef<ReturnType<typeof setTimeout>  | null>(null)
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const progressRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
-  const etapas    = modo === "SEM_PDF" ? ETAPAS_SEM_PDF : ETAPAS
+  const etapas = modo === "SEM_PDF" ? ETAPAS_SEM_PDF : ETAPAS
   const tipoLabel = tipo === "MENSAL" ? "Plano Mensal" : "Aula Única"
   const temPaginas = modo !== "SEM_PDF" && tipo === "AULA_UNICA" && pagDe && pagAte
 
   // Limpa todos os timers
   function limparTimers() {
-    if (timerRef.current)    clearInterval(timerRef.current)
-    if (timeoutRef.current)  clearTimeout(timeoutRef.current)
+    if (timerRef.current) clearInterval(timerRef.current)
+    if (timeoutRef.current) clearTimeout(timeoutRef.current)
     if (progressRef.current) clearInterval(progressRef.current)
   }
 
@@ -111,6 +113,7 @@ export default function PassoRevisao() {
     if (gerando) return
     setGerando(true)
     setErro(null)
+    setErroCode(null)
     setProgresso(0)
     avancarEtapa(0)
 
@@ -154,6 +157,7 @@ export default function PassoRevisao() {
         limparTimers()
 
         if (!res.ok) {
+          setErroCode(data.erro)
           setErro(ERROS[data.erro] ?? "Erro inesperado. Tenta de novo!")
           setGerando(false)
           return
@@ -176,19 +180,19 @@ export default function PassoRevisao() {
         avancarEtapa(1)
 
         const formData = new FormData()
-        formData.append("pdf",     arquivoFinal)
-        formData.append("serie",   serie)
+        formData.append("pdf", arquivoFinal)
+        formData.append("serie", serie)
         formData.append("materia", materia)
-        formData.append("tipo",    tipo)
-        if (pagDe)        formData.append("pagDe",        pagDe)
-        if (pagAte)       formData.append("pagAte",       pagAte)
-        if (codigoBncc)   formData.append("codigoBncc",   codigoBncc)
+        formData.append("tipo", tipo)
+        if (pagDe) formData.append("pagDe", pagDe)
+        if (pagAte) formData.append("pagAte", pagAte)
+        if (codigoBncc) formData.append("codigoBncc", codigoBncc)
         if (descricaoBncc) formData.append("descricaoBncc", descricaoBncc)
 
         // Etapa 2 — IA processando (avança após 3s do envio)
         timerRef.current = setTimeout(() => avancarEtapa(2), 3000)
 
-        const res  = await fetch("/api/gerar-plano", { method: "POST", body: formData })
+        const res = await fetch("/api/gerar-plano", { method: "POST", body: formData })
         const data = await res.json()
 
         // Etapa 3 — montando Word
@@ -198,6 +202,7 @@ export default function PassoRevisao() {
         limparTimers()
 
         if (!res.ok) {
+          setErroCode(data.erro)
           setErro(ERROS[data.erro] ?? "Erro inesperado. Tenta de novo!")
           setGerando(false)
           return
@@ -211,6 +216,7 @@ export default function PassoRevisao() {
     } catch (e) {
       limparTimers()
       console.error("[PassoRevisao] erro catch:", e)
+      setErroCode("FALHA_GERACAO")
       setErro(ERROS.FALHA_GERACAO)
       setGerando(false)
     }
@@ -230,10 +236,10 @@ export default function PassoRevisao() {
         {/* Círculo de progresso */}
         <div className="relative mb-6" style={{ width: 96, height: 96 }}>
           <svg width="96" height="96" viewBox="0 0 96 96" style={{ transform: "rotate(-90deg)" }}>
-            <circle cx="48" cy="48" r="40" fill="none" stroke="#fff1ea" strokeWidth="8" />
+            <circle cx="48" cy="48" r="40" fill="none" stroke="var(--ds-surface-low)" strokeWidth="8" />
             <circle
               cx="48" cy="48" r="40" fill="none"
-              stroke="#ff8c00" strokeWidth="8"
+              stroke="var(--ds-primary-bright)" strokeWidth="8"
               strokeLinecap="round"
               strokeDasharray={`${2 * Math.PI * 40}`}
               strokeDashoffset={`${2 * Math.PI * 40 * (1 - progresso / 100)}`}
@@ -241,17 +247,17 @@ export default function PassoRevisao() {
             />
           </svg>
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-[18px] font-700 text-[#904d00]">{progresso}%</span>
+            <span className="text-[18px] font-700" style={{ color: "var(--ds-secondary)" }}>{progresso}%</span>
           </div>
         </div>
 
-        <p className="text-[18px] font-600 text-[#2f1402] mb-1">
+        <p className="text-[18px] font-600 mb-1" style={{ color: "var(--ds-on-surface)" }}>
           {etapa.label}…
         </p>
-        <p className="text-[13px] text-[#a87b5e] mb-1">
+        <p className="text-[13px] mb-1" style={{ color: "var(--ds-terracotta)" }}>
           pode tomar um cafezinho! ☕
         </p>
-        <p className="text-[12px] text-[#c2a090] mb-8">
+        <p className="text-[12px] mb-8" style={{ color: "var(--ds-muted)" }}>
           Tempo decorrido: {tempoStr}
         </p>
 
@@ -259,35 +265,35 @@ export default function PassoRevisao() {
         <div className="flex flex-col gap-2 w-full">
           {etapas.map((e, i) => {
             const concluida = i < etapaIdx
-            const ativa     = i === etapaIdx
+            const ativa = i === etapaIdx
             return (
               <div
                 key={e.label}
                 className="flex items-center gap-3 px-4 py-2.5 rounded-[12px] transition-all"
                 style={{
-                  backgroundColor: concluida ? "#edf7ee" : ativa ? "#fff1ea" : "#fff8f5",
+                  backgroundColor: concluida ? "var(--ds-plan-pro-bg)" : ativa ? "var(--ds-surface-low)" : "var(--ds-surface)",
                 }}
               >
                 <div
                   className="w-5 h-5 rounded-full flex items-center justify-center text-[11px] font-700 shrink-0"
                   style={{
-                    backgroundColor: concluida ? "#4caf50" : ativa ? "#ff8c00" : "#f0ddd0",
-                    color: concluida || ativa ? "#fff" : "#a87b5e",
+                    backgroundColor: concluida ? "var(--ds-ink-success)" : ativa ? "var(--ds-primary-bright)" : "var(--ds-border)",
+                    color: "#fff",
                   }}
                 >
                   {concluida ? "✓" : i + 1}
                 </div>
                 <span
                   className="text-[13px] flex-1 text-left"
-                  style={{ color: concluida ? "#2e7d32" : ativa ? "#2f1402" : "#a87b5e" }}
+                  style={{ color: concluida ? "var(--ds-ink-success)" : ativa ? "var(--ds-on-surface)" : "var(--ds-on-surface-var)" }}
                 >
                   {e.label}
                 </span>
                 {ativa && (
-                  <span className="text-[11px] text-[#ff8c00] font-600">em andamento</span>
+                  <span className="text-[11px] font-600" style={{ color: "var(--ds-primary-bright)" }}>em andamento</span>
                 )}
                 {concluida && (
-                  <span className="text-[11px] text-[#4caf50] font-600">concluído</span>
+                  <span className="text-[11px] font-600" style={{ color: "var(--ds-ink-success)" }}>concluído</span>
                 )}
               </div>
             )
@@ -298,7 +304,7 @@ export default function PassoRevisao() {
         {tempoDecorrido >= 60 && (
           <div
             className="mt-6 px-4 py-3 rounded-[12px] text-[13px] text-left w-full"
-            style={{ backgroundColor: "#fff8e1", color: "#e65100" }}
+            style={{ backgroundColor: "var(--ds-warning-bg)", color: "var(--ds-ink-warning)" }}
           >
             ⏳ Está demorando um pouco mais que o normal. Pode levar até 3 minutos para planos mensais. Aguarde mais um pouco!
           </div>
@@ -310,30 +316,30 @@ export default function PassoRevisao() {
   // ── Formulário de revisão ────────────────────────────────────
   const camposResumo = modo === "SEM_PDF"
     ? [
-        { label: "Série",       value: serie },
-        { label: "Matéria",     value: materia },
-        { label: "Tipo",        value: tipoLabel },
-        { label: "Tema",        value: tema },
-        { label: "Código BNCC", value: codigoBncc || "—" },
-        { label: "Duração",     value: `${duracao} minutos` },
-      ]
+      { label: "Série", value: serie },
+      { label: "Matéria", value: materia },
+      { label: "Tipo", value: tipoLabel },
+      { label: "Tema", value: tema },
+      { label: "Código BNCC", value: codigoBncc || "—" },
+      { label: "Duração", value: `${duracao} minutos` },
+    ]
     : [
-        { label: "Série",   value: serie },
-        { label: "Matéria", value: materia },
-        { label: "Tipo",    value: tipoLabel },
-        ...(temPaginas ? [{ label: "Páginas", value: `${pagDe} a ${pagAte}` }] : []),
-        { label: "PDF",     value: pdfFile?.name ?? "—" },
-      ]
+      { label: "Série", value: serie },
+      { label: "Matéria", value: materia },
+      { label: "Tipo", value: tipoLabel },
+      ...(temPaginas ? [{ label: "Páginas", value: `${pagDe} a ${pagAte}` }] : []),
+      { label: "PDF", value: pdfFile?.name ?? "—" },
+    ]
 
   return (
     <div>
-      <h2 className="text-xl font-medium text-[#7c4a2d] mb-6">Revisar e confirmar</h2>
+      <h2 className="text-xl font-medium mb-6" style={{ color: "var(--ds-terracotta)" }}>Revisar e confirmar</h2>
 
-      <div className="rounded-2xl p-5 mb-4 space-y-3" style={{ backgroundColor: "#fff8f5" }}>
+      <div className="rounded-2xl p-5 mb-4 space-y-3" style={{ backgroundColor: "var(--ds-surface)" }}>
         {camposResumo.map(({ label, value }) => (
           <div key={label} className="flex items-center justify-between">
-            <span className="text-[13px] text-[#a87b5e]">{label}</span>
-            <span className="text-[14px] font-500 text-[#2f1402] max-w-[60%] text-right truncate">{value}</span>
+            <span className="text-[13px]" style={{ color: "var(--ds-muted)" }}>{label}</span>
+            <span className="text-[14px] font-500 max-w-[60%] text-right truncate" style={{ color: "var(--ds-on-surface)" }}>{value}</span>
           </div>
         ))}
       </div>
@@ -341,7 +347,7 @@ export default function PassoRevisao() {
       {temPaginas && (
         <div
           className="flex items-start gap-2 px-4 py-3 rounded-[12px] mb-4 text-[13px]"
-          style={{ backgroundColor: "#edf7ee", color: "#2e7d32" }}
+          style={{ backgroundColor: "var(--ds-plan-pro-bg)", color: "var(--ds-ink-success)" }}
         >
           <span>✂️</span>
           <span>Só as páginas {pagDe} a {pagAte} serão enviadas para a IA — mais rápido e econômico.</span>
@@ -350,18 +356,41 @@ export default function PassoRevisao() {
 
       {erro && (
         <div
-          className="px-4 py-3 rounded-[12px] mb-4 text-[13px]"
-          style={{ backgroundColor: "#fde8e8", color: "#ba1a1a", border: "1px solid #f5c2c2" }}
+          className="p-6 rounded-[24px] mb-6 text-center shadow-xl animate-in fade-in zoom-in duration-300"
+          style={{
+            backgroundColor: "var(--ds-error-bg)",
+            border: "2px solid var(--ds-ink-error)",
+          }}
         >
-          ⚠️ {erro}
+          <span className="text-4xl mb-3 block">⚠️</span>
+          <p className="text-[17px] font-800 mb-2" style={{ color: "var(--ds-ink-error)" }}>
+            Opa, aconteceu um probleminha!
+          </p>
+          <p className="text-[14px] leading-relaxed mb-5" style={{ color: "var(--ds-on-surface)" }}>
+            {erro}
+          </p>
+
+          {erroCode === "LIMITE_TRIAL" || erroCode === "TRIAL_EXPIRADO" ? (
+            <Link
+              href="/assinar"
+              className="inline-flex items-center gap-2 h-12 px-8 rounded-xl text-white font-bold no-underline transition-transform hover:scale-105 active:scale-95 shadow-lg"
+              style={{ backgroundColor: "#2e7d32" }}
+            >
+              🚀 Quero ser Pro e criar planos ilimitados!
+            </Link>
+          ) : (
+            <div className="text-[12px] opacity-70" style={{ color: "var(--ds-on-surface)" }}>
+              Se precisar de ajuda, mande um Zap pra gente! 📱
+            </div>
+          )}
         </div>
       )}
 
       <div className="flex gap-3">
         <button
           onClick={voltar}
-          className="h-14 px-6 rounded-[14px] text-[#7c4a2d] font-medium"
-          style={{ backgroundColor: "#fff1ea" }}
+          className="h-14 px-6 rounded-[14px] font-medium"
+          style={{ backgroundColor: "var(--ds-surface-low)", color: "var(--ds-terracotta)" }}
         >
           Voltar
         </button>
@@ -376,3 +405,4 @@ export default function PassoRevisao() {
     </div>
   )
 }
+

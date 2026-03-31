@@ -8,17 +8,21 @@ export default function Stepper() {
   const passoMaximo = getPassoMaximo(modo)
 
   return (
-    <div className="flex gap-3">
+    <div className="flex gap-2 w-full">
       {Array.from({ length: passoMaximo }, (_, i) => i + 1).map((step) => (
         <div
           key={step}
-          className={`h-3 rounded-full transition-all duration-300 ${
+          className={`flex-1 h-2 rounded-full transition-all duration-300 ${
             passo >= step
-              ? "bg-[#c2571a] w-16"
-              : "bg-[#fff1ea] w-8"
+              ? "active-step"
+              : "inactive-step"
           }`}
+          style={{
+            backgroundColor: passo >= step ? "var(--ds-secondary)" : "var(--ds-surface-low)"
+          }}
         />
       ))}
     </div>
   )
 }
+

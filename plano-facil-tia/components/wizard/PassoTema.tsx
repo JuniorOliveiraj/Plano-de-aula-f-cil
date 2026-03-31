@@ -24,7 +24,7 @@ export default function PassoTema() {
 
   return (
     <div>
-      <h2 className="text-xl font-medium text-[#7c4a2d] mb-6">
+      <h2 className="text-xl font-medium mb-6" style={{ color: "var(--ds-terracotta)" }}>
         Qual é o tema da aula?
       </h2>
 
@@ -37,29 +37,29 @@ export default function PassoTema() {
         maxLength={200}
         placeholder="Ex: Frações, Sistema Solar, Verbos no passado..."
         rows={3}
-        className="w-full px-4 py-3 text-[#2f1402] resize-none outline-none transition"
+        className="w-full px-4 py-3 resize-none outline-none transition"
         style={{
           minHeight: 56,
-          backgroundColor: "#fff1ea",
-          border: "1px solid #f0ddd0",
+          backgroundColor: "var(--ds-surface-low)",
+          border: "1px solid var(--ds-border)",
           borderRadius: "14px",
-          color: "#2f1402",
+          color: "var(--ds-on-surface)",
         }}
       />
 
-      <p className="text-right text-[12px] text-[#a87b5e] mt-1">
+      <p className="text-right text-[12px] mt-1" style={{ color: "var(--ds-muted)" }}>
         {valor.length}/200
       </p>
 
       {erro && (
-        <p className="text-sm text-[#ba1a1a] mt-2">{erro}</p>
+        <p className="text-sm mt-2" style={{ color: "var(--ds-ink-error)" }}>{erro}</p>
       )}
 
       <div className="flex gap-3 mt-6">
         <button
           onClick={voltar}
-          className="h-14 px-6 rounded-[14px] text-[#7c4a2d] font-medium"
-          style={{ backgroundColor: "#fff1ea" }}
+          className="h-14 px-6 rounded-[14px] font-medium"
+          style={{ backgroundColor: "var(--ds-surface-low)", color: "var(--ds-terracotta)" }}
         >
           Voltar
         </button>
@@ -75,3 +75,4 @@ export default function PassoTema() {
     </div>
   )
 }
+

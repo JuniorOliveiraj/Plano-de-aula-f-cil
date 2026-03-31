@@ -26,7 +26,7 @@ export default function PassoEscolhaModo() {
 
   return (
     <div>
-      <h2 className="text-xl font-medium text-[#7c4a2d] mb-6">
+      <h2 className="text-xl font-medium mb-6" style={{ color: "var(--ds-terracotta)" }}>
         Como você quer criar o plano?
       </h2>
 
@@ -41,13 +41,13 @@ export default function PassoEscolhaModo() {
               style={{
                 borderRadius: "2rem",
                 minHeight: "160px",
-                backgroundColor: selecionado ? "#fff1ea" : "#fff8f5",
-                outline: selecionado ? "2px solid #ff8c00" : "none",
+                backgroundColor: selecionado ? "var(--ds-surface-low)" : "var(--ds-surface)",
+                outline: selecionado ? "2px solid var(--ds-primary-bright)" : "none",
               }}
             >
               <span className="text-3xl">{item.emoji}</span>
-              <p className="text-[15px] font-semibold text-[#2f1402]">{item.titulo}</p>
-              <p className="text-[13px] text-[#564334] leading-relaxed">{item.descricao}</p>
+              <p className="text-[15px] font-semibold" style={{ color: "var(--ds-on-surface)" }}>{item.titulo}</p>
+              <p className="text-[13px] leading-relaxed" style={{ color: "var(--ds-on-surface-var)" }}>{item.descricao}</p>
             </button>
           )
         })}
@@ -55,3 +55,4 @@ export default function PassoEscolhaModo() {
     </div>
   )
 }
+

@@ -102,34 +102,34 @@ function BotaoDownload({ id, serie, materia }: { id: string; serie: string; mate
         <div
           className="absolute left-0 right-0 mt-1.5 rounded-[12px] overflow-hidden z-50"
           style={{
-            backgroundColor: "#ffffff",
-            boxShadow: "0 8px 24px rgba(144,77,0,0.15)",
-            border: "1px solid #f0ddd0",
+            backgroundColor: "var(--ds-surface-card)",
+            boxShadow: "0 8px 24px var(--ds-shadow-lg)",
+            border: "1px solid var(--ds-border)",
           }}
         >
           <button
             onClick={() => handleDownload("word")}
             className="w-full flex items-center gap-3 px-4 py-3 text-left transition-colors"
-            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#fff8f5" }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "var(--ds-surface-low)" }}
             onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent" }}
           >
             <span className="text-lg">📝</span>
             <div>
-              <p className="text-[13px] font-600 text-[#2f1402]">Word (.docx)</p>
-              <p className="text-[11px] text-[#a87b5e]">Edite no Word ou Google Docs</p>
+              <p className="text-[13px] font-600" style={{ color: "var(--ds-on-surface)" }}>Word (.docx)</p>
+              <p className="text-[11px]" style={{ color: "var(--ds-muted)" }}>Edite no Word ou Google Docs</p>
             </div>
           </button>
-          <div style={{ height: 1, backgroundColor: "#f0ddd0", margin: "0 12px" }} />
+          <div style={{ height: 1, backgroundColor: "var(--ds-border)", margin: "0 12px" }} />
           <button
             onClick={() => handleDownload("pdf")}
             className="w-full flex items-center gap-3 px-4 py-3 text-left transition-colors"
-            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#fff8f5" }}
+            onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "var(--ds-surface-low)" }}
             onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent" }}
           >
             <span className="text-lg">📄</span>
             <div>
-              <p className="text-[13px] font-600 text-[#2f1402]">PDF</p>
-              <p className="text-[11px] text-[#a87b5e]">Pronto pra imprimir ou compartilhar</p>
+              <p className="text-[13px] font-600" style={{ color: "var(--ds-on-surface)" }}>PDF</p>
+              <p className="text-[11px]" style={{ color: "var(--ds-muted)" }}>Pronto pra imprimir ou compartilhar</p>
             </div>
           </button>
         </div>
@@ -170,8 +170,8 @@ export default function PlanosClient({ planos }: { planos: Plano[] }) {
     <div className="max-w-7xl mx-auto space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-[28px] font-700 text-[#2f1402]">Meus Planos</h1>
-          <p className="text-[14px] text-[#a87b5e] mt-1">{lista.length} plano{lista.length !== 1 ? "s" : ""} gerado{lista.length !== 1 ? "s" : ""}</p>
+          <h1 className="text-[28px] font-700" style={{ color: "var(--ds-on-surface)" }}>Meus Planos</h1>
+          <p className="text-[14px] mt-1" style={{ color: "var(--ds-muted)" }}>{lista.length} plano{lista.length !== 1 ? "s" : ""} gerado{lista.length !== 1 ? "s" : ""}</p>
         </div>
         <Link
           href="/dashboard/plano/novo"
@@ -187,8 +187,12 @@ export default function PlanosClient({ planos }: { planos: Plano[] }) {
         <select
           value={filtroSerie}
           onChange={(e) => setFiltroSerie(e.target.value)}
-          className="h-10 px-3 rounded-[10px] text-sm text-[#2f1402] outline-none"
-          style={{ backgroundColor: "#fff1ea", border: "1px solid #f0ddd0" }}
+          className="h-10 px-3 rounded-[10px] text-sm outline-none"
+          style={{
+            backgroundColor: "var(--ds-surface-low)",
+            border: "1px solid var(--ds-border)",
+            color: "var(--ds-on-surface)",
+          }}
         >
           <option value="">Todas as séries</option>
           {series.map((s) => <option key={s} value={s}>{s}</option>)}
@@ -196,8 +200,12 @@ export default function PlanosClient({ planos }: { planos: Plano[] }) {
         <select
           value={filtroMateria}
           onChange={(e) => setFiltroMateria(e.target.value)}
-          className="h-10 px-3 rounded-[10px] text-sm text-[#2f1402] outline-none"
-          style={{ backgroundColor: "#fff1ea", border: "1px solid #f0ddd0" }}
+          className="h-10 px-3 rounded-[10px] text-sm outline-none"
+          style={{
+            backgroundColor: "var(--ds-surface-low)",
+            border: "1px solid var(--ds-border)",
+            color: "var(--ds-on-surface)",
+          }}
         >
           <option value="">Todas as matérias</option>
           {materias.map((m) => <option key={m} value={m}>{m}</option>)}
@@ -205,8 +213,8 @@ export default function PlanosClient({ planos }: { planos: Plano[] }) {
         {(filtroSerie || filtroMateria) && (
           <button
             onClick={() => { setFiltroSerie(""); setFiltroMateria("") }}
-            className="h-10 px-3 rounded-[10px] text-sm text-[#c2571a]"
-            style={{ backgroundColor: "#fff8f5" }}
+            className="h-10 px-3 rounded-[10px] text-sm"
+            style={{ backgroundColor: "var(--ds-surface-low)", color: "var(--ds-secondary)" }}
           >
             Limpar filtros
           </button>
@@ -217,8 +225,8 @@ export default function PlanosClient({ planos }: { planos: Plano[] }) {
       {filtrados.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <span className="text-5xl mb-4">📭</span>
-          <p className="text-[17px] font-600 text-[#2f1402] mb-1">Nenhum plano encontrado</p>
-          <p className="text-[14px] text-[#a87b5e]">
+          <p className="text-[17px] font-600 mb-1" style={{ color: "var(--ds-on-surface)" }}>Nenhum plano encontrado</p>
+          <p className="text-[14px]" style={{ color: "var(--ds-muted)" }}>
             {lista.length === 0 ? "Crie seu primeiro plano agora!" : "Tente outros filtros."}
           </p>
         </div>
@@ -228,22 +236,26 @@ export default function PlanosClient({ planos }: { planos: Plano[] }) {
             const emoji = materiaEmoji[p.materia] ?? "📄"
             const tipoLabel = p.tipo === "MENSAL" ? "Plano Mensal" : "Aula Única"
             const tipoColor = p.tipo === "MENSAL"
-              ? { color: "#904d00", bg: "#fff1ea" }
-              : { color: "#2e7d32", bg: "#edf7ee" }
+              ? { color: "var(--ds-tipo-mensal-color)", bg: "var(--ds-tipo-mensal-bg)" }
+              : { color: "var(--ds-tipo-aula-color)",   bg: "var(--ds-tipo-aula-bg)" }
 
             return (
               <div
                 key={p.id}
-                className="flex flex-col gap-4 p-5 rounded-[20px] bg-white"
-                style={{ boxShadow: "0 4px 20px rgba(144,77,0,0.06)", border: "1px solid #fff1ea" }}
+                className="flex flex-col gap-4 p-5 rounded-[20px]"
+                style={{
+                  backgroundColor: "var(--ds-surface-card)",
+                  boxShadow: "0 4px 20px var(--ds-shadow)",
+                  border: "1px solid var(--ds-surface-low)",
+                }}
               >
                 <div className="flex items-start gap-3">
-                  <div className="flex items-center justify-center text-xl rounded-[12px] shrink-0" style={{ width: 44, height: 44, backgroundColor: "#fff1ea" }}>
+                  <div className="flex items-center justify-center text-xl rounded-[12px] shrink-0" style={{ width: 44, height: 44, backgroundColor: "var(--ds-surface-low)" }}>
                     {emoji}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-[15px] font-600 text-[#2f1402] truncate">{p.materia}</p>
-                    <p className="text-[13px] text-[#7c4a2d]">{p.serie}</p>
+                    <p className="text-[15px] font-600 truncate" style={{ color: "var(--ds-on-surface)" }}>{p.materia}</p>
+                    <p className="text-[13px]" style={{ color: "var(--ds-terracotta)" }}>{p.serie}</p>
                   </div>
                 </div>
 
@@ -251,7 +263,7 @@ export default function PlanosClient({ planos }: { planos: Plano[] }) {
                   <span className="text-[11px] font-700 uppercase tracking-[0.06em] px-2.5 py-1 rounded-full" style={{ color: tipoColor.color, backgroundColor: tipoColor.bg }}>
                     {tipoLabel}
                   </span>
-                  <span className="text-[12px] text-[#a87b5e]">{p.dataCriacao}</span>
+                  <span className="text-[12px]" style={{ color: "var(--ds-muted)" }}>{p.dataCriacao}</span>
                 </div>
 
                 <div className="flex gap-2">
@@ -259,9 +271,9 @@ export default function PlanosClient({ planos }: { planos: Plano[] }) {
                   <Link
                     href={`/dashboard/plano/resultado/${p.id}`}
                     className="flex items-center justify-center h-10 w-10 rounded-[10px] no-underline transition-colors"
-                    style={{ backgroundColor: "#fff1ea", color: "#7c4a2d" }}
-                    onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.backgroundColor = "#ffeade" }}
-                    onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.backgroundColor = "#fff1ea" }}
+                    style={{ backgroundColor: "var(--ds-surface-low)", color: "var(--ds-terracotta)" }}
+                    onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.backgroundColor = "var(--ds-surface-container)" }}
+                    onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.backgroundColor = "var(--ds-surface-low)" }}
                     title="Ver plano"
                   >
                     <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
@@ -273,9 +285,9 @@ export default function PlanosClient({ planos }: { planos: Plano[] }) {
                     onClick={() => handleExcluir(p.id)}
                     disabled={excluindo === p.id}
                     className="flex items-center justify-center h-10 w-10 rounded-[10px] transition-colors disabled:opacity-50"
-                    style={{ backgroundColor: "#fff1ea", color: "#ba1a1a" }}
-                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#fde8e8" }}
-                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "#fff1ea" }}
+                    style={{ backgroundColor: "var(--ds-surface-low)", color: "var(--ds-ink-error)" }}
+                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "var(--ds-error-bg)" }}
+                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "var(--ds-surface-low)" }}
                     title="Excluir plano"
                   >
                     <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">

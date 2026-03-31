@@ -47,30 +47,30 @@ export default function ResultadoClient({ planoId, serie, materia, tipo, aulas, 
       {/* Badge de sucesso */}
       <div
         className="flex items-center gap-3 p-5 rounded-[20px]"
-        style={{ backgroundColor: "#edf7ee", border: "1px solid #c8e6c9" }}
+        style={{ backgroundColor: "var(--ds-plan-pro-bg)", border: "1px solid var(--ds-ink-success)" }}
       >
         <span className="text-3xl">🎉</span>
         <div>
-          <p className="text-[17px] font-700 text-[#2e7d32]">Seu plano está pronto!</p>
-          <p className="text-[14px] text-[#4caf50]">
+          <p className="text-[17px] font-700" style={{ color: "var(--ds-ink-success)" }}>Seu plano está pronto!</p>
+          <p className="text-[14px]" style={{ color: "var(--ds-secondary)" }}>
             {materia} — {serie} — {data}
           </p>
         </div>
       </div>
 
       {/* Preview da tabela */}
-      <div className="bg-white rounded-[20px] overflow-hidden shadow-[0_4px_20px_rgba(144,77,0,0.06)]">
-        <div className="px-6 py-4" style={{ borderBottom: "1px solid #fff1ea" }}>
-          <p className="text-[15px] font-600 text-[#2f1402]">
+      <div className="rounded-[20px] overflow-hidden" style={{ backgroundColor: "var(--ds-surface-card)", boxShadow: "0 4px 20px var(--ds-shadow)", border: "1px solid var(--ds-border)" }}>
+        <div className="px-6 py-4" style={{ borderBottom: "1px solid var(--ds-border)" }}>
+          <p className="text-[15px] font-600" style={{ color: "var(--ds-on-surface)" }}>
             Preview — primeiras {preview.length} aulas
           </p>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr style={{ backgroundColor: "#fff8f5" }}>
+              <tr style={{ backgroundColor: "var(--ds-surface-low)" }}>
                 {["BNCC", "Data", "Objetivo", "Metodologia"].map((col) => (
-                  <th key={col} className="text-left px-4 py-3 text-[12px] font-700 uppercase tracking-wide text-[#a87b5e]">
+                  <th key={col} className="text-left px-4 py-3 text-[12px] font-700 uppercase tracking-wide" style={{ color: "var(--ds-muted)" }}>
                     {col}
                   </th>
                 ))}
@@ -78,20 +78,20 @@ export default function ResultadoClient({ planoId, serie, materia, tipo, aulas, 
             </thead>
             <tbody>
               {preview.map((aula, i) => (
-                <tr key={i} style={{ borderTop: "1px solid #fff8f5" }}>
-                  <td className="px-4 py-3 font-600 text-[#c2571a] whitespace-nowrap">
+                <tr key={i} style={{ borderTop: "1px solid var(--ds-border)" }}>
+                  <td className="px-4 py-3 font-600 whitespace-nowrap" style={{ color: "var(--ds-secondary)" }}>
                     {codigoBncc ?? "—"}
                   </td>
-                  <td className="px-4 py-3 text-[#564334] whitespace-nowrap">{aula.data}</td>
-                  <td className="px-4 py-3 text-[#2f1402]">{aula.objetivo}</td>
-                  <td className="px-4 py-3 text-[#564334]">{aula.metodologia}</td>
+                  <td className="px-4 py-3 whitespace-nowrap" style={{ color: "var(--ds-terracotta)" }}>{aula.data}</td>
+                  <td className="px-4 py-3" style={{ color: "var(--ds-on-surface)" }}>{aula.objetivo}</td>
+                  <td className="px-4 py-3" style={{ color: "var(--ds-terracotta)" }}>{aula.metodologia}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
         {aulas.length > 3 && (
-          <p className="text-center text-[13px] text-[#a87b5e] py-3">
+          <p className="text-center text-[13px] py-3" style={{ color: "var(--ds-muted)" }}>
             + {aulas.length - 3} aulas no arquivo completo
           </p>
         )}
@@ -114,7 +114,7 @@ export default function ResultadoClient({ planoId, serie, materia, tipo, aulas, 
           onClick={() => handleDownload("pdf")}
           disabled={baixando}
           className="flex-1 flex items-center justify-center gap-2 h-14 rounded-[14px] font-semibold disabled:opacity-70 transition-opacity hover:opacity-90"
-          style={{ backgroundColor: "#fff1ea", color: "#7c4a2d" }}
+          style={{ backgroundColor: "var(--ds-surface-low)", color: "var(--ds-terracotta)" }}
         >
           <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
             <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" /><polyline points="14 2 14 8 20 8" />
@@ -123,8 +123,8 @@ export default function ResultadoClient({ planoId, serie, materia, tipo, aulas, 
         </button>
         <Link
           href="/dashboard"
-          className="h-14 px-6 rounded-[14px] font-medium no-underline flex items-center"
-          style={{ backgroundColor: "#fff1ea", color: "#7c4a2d" }}
+          className="h-14 px-6 rounded-[14px] font-medium no-underline flex items-center transition-opacity hover:opacity-90"
+          style={{ backgroundColor: "var(--ds-surface-low)", color: "var(--ds-terracotta)" }}
         >
           Início
         </Link>
@@ -132,3 +132,4 @@ export default function ResultadoClient({ planoId, serie, materia, tipo, aulas, 
     </div>
   )
 }
+

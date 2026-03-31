@@ -2,14 +2,13 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { gerarPlanoComGemini, gerarPlanoSemPdf } from "@/lib/gemini"
 import { gerarDocx } from "@/lib/docx"
+import { verificarLimite, incrementarUso } from "@/lib/limites"
+import { FuncionalidadeTipo } from "@prisma/client"
 
 // Aumenta o timeout máximo da rota para 3 minutos (PDFs grandes + planos mensais)
 export const maxDuration = 180
 
 const LIMITE_PDF_BYTES = 20 * 1024 * 1024 // 20 MB
-const LIMITE_DIARIO    = 5
-const LIMITE_TRIAL     = 3
-const LIMITE_MENSAL    = 15
 
 export async function POST(req: Request) {
   // 1. Autenticação
@@ -26,33 +25,11 @@ export async function POST(req: Request) {
     return Response.json({ erro: "Usuária não encontrada" }, { status: 404 })
   }
 
-  // Trial expirado
-  if (user.plano === "TRIAL" && user.trialExpiraEm < new Date()) {
-    return Response.json({ erro: "TRIAL_EXPIRADO" }, { status: 403 })
-  }
-
-  // Limite trial (3 planos total)
-  if (user.plano === "TRIAL" && user.planosNoMes >= LIMITE_TRIAL) {
-    return Response.json({ erro: "LIMITE_TRIAL" }, { status: 403 })
-  }
-
-  // Limite mensal professora (15/mês)
-  if (user.plano === "PROFESSORA" && user.planosNoMes >= LIMITE_MENSAL) {
-    return Response.json({ erro: "LIMITE_MENSAL" }, { status: 403 })
-  }
-
-  // Limite diário (5/dia) — conta planos criados hoje
-  const inicioDia = new Date()
-  inicioDia.setHours(0, 0, 0, 0)
-  const planosHoje = await prisma.plano.count({
-    where: { userId, createdAt: { gte: inicioDia } },
-  })
-  if (planosHoje >= LIMITE_DIARIO) {
-    const amanha = new Date(inicioDia)
-    amanha.setDate(amanha.getDate() + 1)
+  const resultado = await verificarLimite(userId, FuncionalidadeTipo.GERAR_PLANO)
+  if (!resultado.permitido) {
     return Response.json(
-      { erro: "LIMITE_DIARIO", liberaEm: amanha.toISOString() },
-      { status: 429 }
+      { erro: resultado.erro, liberaEm: resultado.liberaEm },
+      { status: resultado.erro === "LIMITE_DIARIO" ? 429 : 403 }
     )
   }
 
@@ -114,11 +91,9 @@ export async function POST(req: Request) {
           jsonData: planoJsonFinal as any,
         },
       }),
-      prisma.user.update({
-        where: { id: userId },
-        data:  { planosNoMes: { increment: 1 } },
-      }),
     ])
+
+    await incrementarUso(userId, FuncionalidadeTipo.GERAR_PLANO)
 
     // 6a. Gera Word
     const docxBuffer = await gerarDocx(planoJsonFinal)
@@ -193,11 +168,9 @@ export async function POST(req: Request) {
         jsonData: planoJsonFinal as any,
       },
     }),
-    prisma.user.update({
-      where: { id: userId },
-      data:  { planosNoMes: { increment: 1 } },
-    }),
   ])
+
+  await incrementarUso(userId, FuncionalidadeTipo.GERAR_PLANO)
 
   // 8. Gera Word
   const docxBuffer = await gerarDocx(planoJsonFinal)

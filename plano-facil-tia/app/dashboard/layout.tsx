@@ -1,7 +1,6 @@
 import { auth } from "@/lib/auth"
 import { redirect } from "next/navigation"
-import Sidebar from "@/components/shared/Sidebar"
-import TopBar from "@/components/shared/TopBar"
+import DashboardShell from "@/components/shared/DashboardShell"
 
 export default async function DashboardLayout({
   children,
@@ -21,21 +20,12 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="flex h-screen overflow-hidden" style={{ backgroundColor: "#fff8f5" }}>
-      {/* Sidebar fixa */}
-      <Sidebar userName={user.name} userPlan={user.plano} />
-
-      {/* Área principal */}
-      <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
-        <TopBar userName={user.name} userImage={user.image} />
-
-        <main
-          className="flex-1 overflow-y-auto"
-          style={{ backgroundColor: "#fff8f5", padding: "2rem 2.5rem" }}
-        >
-          {children}
-        </main>
-      </div>
-    </div>
+    <DashboardShell
+      userName={user.name}
+      userImage={user.image}
+      userPlan={user.plano}
+    >
+      {children}
+    </DashboardShell>
   )
 }

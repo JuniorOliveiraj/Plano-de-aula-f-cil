@@ -47,12 +47,12 @@ export default async function DashboardPage() {
     <div className="space-y-8 max-w-7xl mx-auto">
 
       <div>
-        <h1 className="text-[28px] font-700 text-[#2f1402] leading-tight">Seu painel</h1>
-        <p className="text-[14px] text-[#a87b5e] mt-1">Tudo o que você precisa para preparar suas aulas.</p>
+        <h1 className="text-[28px] font-700 leading-tight" style={{ color: "var(--ds-on-surface)" }}>Seu painel</h1>
+        <p className="text-[14px] mt-1" style={{ color: "var(--ds-muted)" }}>Tudo o que você precisa para preparar suas aulas.</p>
       </div>
 
       {/* Stat Cards */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <StatCard
           icon="📊"
           label={`Planos usados — ${plano === "TRIAL" ? "Trial" : "este mês"}`}
@@ -95,7 +95,7 @@ export default async function DashboardPage() {
         <div className="absolute -bottom-16 -left-8 rounded-full opacity-10" style={{ width: 180, height: 180, backgroundColor: "#ffffff" }} aria-hidden />
         <div className="relative z-10">
           <p className="text-white text-[22px] font-700 mb-1">Criar Novo Plano</p>
-          <p className="text-[#ffe4cc] text-[14px]">Escolha a série, envie o PDF do livro e receba o plano em Word. ✨</p>
+          <p style={{ color: "#ffe4cc" }} className="text-[14px]">Escolha a série, envie o PDF do livro e receba o plano em Word. ✨</p>
         </div>
         <Link
           href="/dashboard/plano/novo"
@@ -112,8 +112,12 @@ export default async function DashboardPage() {
       {/* Planos Recentes */}
       <section>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-[18px] font-700 text-[#2f1402]">Planos Recentes</h2>
-          <Link href="/dashboard/planos" className="text-[13px] font-600 no-underline flex items-center gap-1 transition-opacity hover:opacity-70" style={{ color: "#c2571a" }}>
+          <h2 className="text-[18px] font-700" style={{ color: "var(--ds-on-surface)" }}>Planos Recentes</h2>
+          <Link
+            href="/dashboard/planos"
+            className="text-[13px] font-600 no-underline flex items-center gap-1 transition-opacity hover:opacity-70"
+            style={{ color: "var(--ds-secondary)" }}
+          >
             Ver todos
             <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
               <path d="M9 18l6-6-6-6" />
@@ -122,13 +126,16 @@ export default async function DashboardPage() {
         </div>
 
         {planosRecentes.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-12 rounded-[20px] text-center" style={{ backgroundColor: "#fff8f5" }}>
+          <div
+            className="flex flex-col items-center justify-center py-12 rounded-[20px] text-center"
+            style={{ backgroundColor: "var(--ds-surface-low)" }}
+          >
             <span className="text-4xl mb-3">📭</span>
-            <p className="text-[15px] font-500 text-[#7c4a2d]">Nenhum plano ainda</p>
-            <p className="text-[13px] text-[#a87b5e] mt-1">Crie seu primeiro plano clicando em "Criar agora".</p>
+            <p className="text-[15px] font-500" style={{ color: "var(--ds-terracotta)" }}>Nenhum plano ainda</p>
+            <p className="text-[13px] mt-1" style={{ color: "var(--ds-muted)" }}>Crie seu primeiro plano clicando em &quot;Criar agora&quot;.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {planosRecentes.map((p) => (
               <PlanCard
                 key={p.id}
@@ -146,17 +153,20 @@ export default async function DashboardPage() {
       {/* Banner upgrade — só para trial */}
       {plano === "TRIAL" && (
         <div
-          className="flex items-center justify-between p-5 rounded-[20px]"
-          style={{ backgroundColor: "#fff1ea", border: "1px dashed #f0ddd0" }}
+          className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-5 rounded-[20px]"
+          style={{
+            backgroundColor: "var(--ds-surface-container)",
+            border: "1px dashed var(--ds-border)",
+          }}
         >
           <div>
-            <p className="text-[15px] font-600 text-[#7c4a2d]">Gostando do Plano Fácil Tia? 💛</p>
-            <p className="text-[13px] text-[#a87b5e] mt-0.5">Assine o plano Professora por R$19,90/mês e gere até 15 planos por mês.</p>
+            <p className="text-[15px] font-600" style={{ color: "var(--ds-terracotta)" }}>Gostando do Plano Fácil Tia? 💛</p>
+            <p className="text-[13px] mt-0.5" style={{ color: "var(--ds-muted)" }}>Assine o plano Professora por R$19,90/mês e gere até 15 planos por mês.</p>
           </div>
           <Link
             href="/assinar"
             className="flex items-center gap-2 h-10 px-5 rounded-[12px] text-[13px] font-700 shrink-0 no-underline transition-opacity hover:opacity-90"
-            style={{ backgroundColor: "#904d00", color: "#ffffff" }}
+            style={{ backgroundColor: "var(--ds-primary)", color: "#ffffff" }}
           >
             Assinar agora
           </Link>

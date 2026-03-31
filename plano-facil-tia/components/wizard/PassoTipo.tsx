@@ -12,7 +12,7 @@ export default function PassoTipo() {
 
   return (
     <div>
-      <h2 className="text-xl font-medium text-[#7c4a2d] mb-6">Tipo de plano</h2>
+      <h2 className="text-xl font-medium mb-6" style={{ color: "var(--ds-terracotta)" }}>Tipo de plano</h2>
 
       <div className="grid grid-cols-2 gap-4 mb-6">
         {/* Mensal */}
@@ -20,13 +20,13 @@ export default function PassoTipo() {
           onClick={() => setTipo("MENSAL")}
           className="flex flex-col items-start gap-2 p-5 rounded-2xl text-left transition"
           style={{
-            backgroundColor: tipo === "MENSAL" ? "#fff1ea" : "#fff8f5",
-            outline: tipo === "MENSAL" ? "2px solid #ff8c00" : "none",
+            backgroundColor: tipo === "MENSAL" ? "var(--ds-surface-low)" : "var(--ds-surface)",
+            outline: tipo === "MENSAL" ? "2px solid var(--ds-primary-bright)" : "none",
           }}
         >
           <span className="text-2xl">📅</span>
-          <p className="text-[15px] font-600 text-[#2f1402]">Plano Mensal</p>
-          <p className="text-[13px] text-[#7c4a2d]">20 a 25 aulas — cobre o mês inteiro</p>
+          <p className="text-[15px] font-600" style={{ color: "var(--ds-on-surface)" }}>Plano Mensal</p>
+          <p className="text-[13px]" style={{ color: "var(--ds-terracotta)" }}>20 a 25 aulas — cobre o mês inteiro</p>
         </button>
 
         {/* Aula única */}
@@ -34,46 +34,54 @@ export default function PassoTipo() {
           onClick={() => setTipo("AULA_UNICA")}
           className="flex flex-col items-start gap-2 p-5 rounded-2xl text-left transition"
           style={{
-            backgroundColor: tipo === "AULA_UNICA" ? "#fff1ea" : "#fff8f5",
-            outline: tipo === "AULA_UNICA" ? "2px solid #ff8c00" : "none",
+            backgroundColor: tipo === "AULA_UNICA" ? "var(--ds-surface-low)" : "var(--ds-surface)",
+            outline: tipo === "AULA_UNICA" ? "2px solid var(--ds-primary-bright)" : "none",
           }}
         >
           <span className="text-2xl">📌</span>
-          <p className="text-[15px] font-600 text-[#2f1402]">Aula Única</p>
-          <p className="text-[13px] text-[#7c4a2d]">1 aula detalhada e específica</p>
+          <p className="text-[15px] font-600" style={{ color: "var(--ds-on-surface)" }}>Aula Única</p>
+          <p className="text-[13px]" style={{ color: "var(--ds-terracotta)" }}>1 aula detalhada e específica</p>
         </button>
       </div>
 
       {/* Campo de páginas — só para aula única */}
       {tipo === "AULA_UNICA" && (
-        <div className="rounded-2xl p-4 mb-6" style={{ backgroundColor: "#fff8f5" }}>
-          <p className="text-sm font-medium text-[#7c4a2d] mb-3">
+        <div className="rounded-2xl p-4 mb-6" style={{ backgroundColor: "var(--ds-surface)" }}>
+          <p className="text-sm font-medium mb-3" style={{ color: "var(--ds-terracotta)" }}>
             Páginas do PDF (opcional)
           </p>
           <div className="flex items-center gap-3">
             <div className="flex-1">
-              <label className="text-xs text-[#a87b5e] mb-1 block">De</label>
+              <label className="text-xs mb-1 block" style={{ color: "var(--ds-muted)" }}>De</label>
               <input
                 type="number"
                 min={1}
                 value={pagDe}
                 onChange={(e) => setPaginas(e.target.value, pagAte)}
                 placeholder="1"
-                className="w-full h-11 rounded-xl bg-white px-3 text-[#2f1402] outline-none focus:ring-2 focus:ring-[#ff8c00] text-sm"
-                style={{ border: "1px solid #f0ddd0" }}
+                className="w-full h-11 rounded-xl px-3 outline-none focus:ring-2 focus:ring-[#ff8c00] text-sm"
+                style={{
+                  backgroundColor: "var(--ds-surface-card)",
+                  border: "1px solid var(--ds-border)",
+                  color: "var(--ds-on-surface)"
+                }}
               />
             </div>
-            <span className="text-[#a87b5e] mt-4">até</span>
+            <span className="mt-4" style={{ color: "var(--ds-muted)" }}>até</span>
             <div className="flex-1">
-              <label className="text-xs text-[#a87b5e] mb-1 block">Até</label>
+              <label className="text-xs mb-1 block" style={{ color: "var(--ds-muted)" }}>Até</label>
               <input
                 type="number"
                 min={1}
                 value={pagAte}
                 onChange={(e) => setPaginas(pagDe, e.target.value)}
                 placeholder="50"
-                className="w-full h-11 rounded-xl bg-white px-3 text-[#2f1402] outline-none focus:ring-2 focus:ring-[#ff8c00] text-sm"
-                style={{ border: "1px solid #f0ddd0" }}
+                className="w-full h-11 rounded-xl px-3 outline-none focus:ring-2 focus:ring-[#ff8c00] text-sm"
+                style={{
+                  backgroundColor: "var(--ds-surface-card)",
+                  border: "1px solid var(--ds-border)",
+                  color: "var(--ds-on-surface)"
+                }}
               />
             </div>
           </div>
@@ -83,8 +91,8 @@ export default function PassoTipo() {
       <div className="flex gap-3">
         <button
           onClick={voltar}
-          className="h-14 px-6 rounded-[14px] text-[#7c4a2d] font-medium"
-          style={{ backgroundColor: "#fff1ea" }}
+          className="h-14 px-6 rounded-[14px] font-medium"
+          style={{ backgroundColor: "var(--ds-surface-low)", color: "var(--ds-terracotta)" }}
         >
           Voltar
         </button>
@@ -100,3 +108,4 @@ export default function PassoTipo() {
     </div>
   )
 }
+

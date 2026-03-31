@@ -242,6 +242,37 @@ async function main() {
     ],
     skipDuplicates: true,
   })
+
+  await prisma.configLimite.createMany({
+    data: [
+      {
+        id: "config-trial-gerar-plano",
+        planoTipo: "TRIAL",
+        funcionalidade: "GERAR_PLANO",
+        limiteTotal: 3,
+        limiteDiario: 5,
+        limiteMensal: null,
+      },
+      {
+        id: "config-professora-gerar-plano",
+        planoTipo: "PROFESSORA",
+        funcionalidade: "GERAR_PLANO",
+        limiteMensal: 15,
+        limiteDiario: 5,
+        limiteTotal: null,
+      },
+      {
+        id: "config-escola-gerar-plano",
+        planoTipo: "ESCOLA",
+        funcionalidade: "GERAR_PLANO",
+        limiteMensal: 100,
+        limiteDiario: 30,
+        limiteTotal: null,
+      },
+    ],
+    skipDuplicates: true,
+  })
+
   console.log("Seed concluído!")
 }
 

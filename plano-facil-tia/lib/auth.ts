@@ -9,32 +9,57 @@ if (!process.env.NEXTAUTH_SECRET) {
   throw new Error("NEXTAUTH_SECRET is not defined in environment variables.")
 }
 
+// 👇 Tipagem dos dados retornados no login
+type AppUser = {
+  id: string
+  name: string | null
+  email: string | null
+  plano: string | null
+  role: string | null
+}
+
+// 👇 Tipagem das credenciais
+type CredentialsInput = {
+  email: string
+  password: string
+}
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
+
   session: {
     strategy: "jwt",
   },
+
   secret: process.env.NEXTAUTH_SECRET,
+
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
+
     Credentials({
       name: "Credentials",
+
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Senha", type: "password" },
       },
+
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
+        // 👇 cast seguro
+        const creds = credentials as CredentialsInput
+
+        if (!creds?.email || !creds?.password) {
           return null
         }
 
-        const normalizedEmail = String(credentials.email).toLowerCase().trim()
+        const email = creds.email.toLowerCase().trim()
+        const password = creds.password
 
         const user = await prisma.user.findUnique({
-          where: { email: normalizedEmail },
+          where: { email },
         })
 
         if (!user || !user.passwordHash) {
@@ -42,7 +67,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
 
         const senhaValida = await bcrypt.compare(
-          credentials.password,
+          password,
           user.passwordHash
         )
 
@@ -50,31 +75,40 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           return null
         }
 
-        return {
+        // 👇 retorno tipado
+        const appUser: AppUser = {
           id: user.id,
           name: user.name,
           email: user.email,
           plano: user.plano,
           role: user.role,
         }
+
+        return appUser
       },
     }),
   ],
+
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.userId = (user as any).id
-        token.plano = (user as any).plano
-        token.role = (user as any).role
+        const u = user as AppUser
+
+        token.userId = u.id
+        token.plano = u.plano
+        token.role = u.role
       }
+
       return token
     },
+
     async session({ session, token }) {
       if (session.user) {
         ;(session.user as any).id = token.userId
         ;(session.user as any).plano = token.plano
         ;(session.user as any).role = token.role
       }
+
       return session
     },
   },

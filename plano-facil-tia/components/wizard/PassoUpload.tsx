@@ -34,7 +34,7 @@ export default function PassoUpload() {
 
   return (
     <div>
-      <h2 className="text-xl font-medium text-[#7c4a2d] mb-6">
+      <h2 className="text-xl font-medium mb-6" style={{ color: "var(--ds-terracotta)" }}>
         Envie o PDF do livro didático
       </h2>
 
@@ -45,8 +45,8 @@ export default function PassoUpload() {
         onDragOver={(e) => e.preventDefault()}
         className="flex flex-col items-center justify-center gap-3 rounded-2xl cursor-pointer transition mb-4"
         style={{
-          border: `2px dashed ${pdfFile ? "#ff8c00" : "#f0ddd0"}`,
-          backgroundColor: pdfFile ? "#fff1ea" : "#fff8f5",
+          border: `2px dashed ${pdfFile ? "var(--ds-primary-bright)" : "var(--ds-border)"}`,
+          backgroundColor: pdfFile ? "var(--ds-surface-low)" : "var(--ds-surface)",
           minHeight: 160,
           padding: "2rem",
         }}
@@ -54,20 +54,20 @@ export default function PassoUpload() {
         {pdfFile ? (
           <>
             <span className="text-4xl">✅</span>
-            <p className="text-[15px] font-600 text-[#2f1402] text-center break-all">
+            <p className="text-[15px] font-600 text-center break-all" style={{ color: "var(--ds-on-surface)" }}>
               {pdfFile.name}
             </p>
-            <p className="text-[13px] text-[#7c4a2d]">
+            <p className="text-[13px]" style={{ color: "var(--ds-terracotta)" }}>
               {(pdfFile.size / 1024 / 1024).toFixed(1)} MB — clique para trocar
             </p>
           </>
         ) : (
           <>
             <span className="text-4xl">📄</span>
-            <p className="text-[15px] font-500 text-[#564334] text-center">
+            <p className="text-[15px] font-500 text-center" style={{ color: "var(--ds-on-surface-var)" }}>
               Clique para escolher ou arraste o PDF aqui
             </p>
-            <p className="text-[13px] text-[#a87b5e]">Máximo {MAX_MB}MB</p>
+            <p className="text-[13px]" style={{ color: "var(--ds-muted)" }}>Máximo {MAX_MB}MB</p>
           </>
         )}
       </div>
@@ -81,14 +81,14 @@ export default function PassoUpload() {
       />
 
       {erro && (
-        <p className="text-sm text-[#ba1a1a] mb-4">{erro}</p>
+        <p className="text-sm mb-4" style={{ color: "var(--ds-ink-error)" }}>{erro}</p>
       )}
 
       <div className="flex gap-3 mt-6">
         <button
           onClick={voltar}
-          className="h-14 px-6 rounded-[14px] text-[#7c4a2d] font-medium"
-          style={{ backgroundColor: "#fff1ea" }}
+          className="h-14 px-6 rounded-[14px] font-medium"
+          style={{ backgroundColor: "var(--ds-surface-low)", color: "var(--ds-terracotta)" }}
         >
           Voltar
         </button>
@@ -104,3 +104,4 @@ export default function PassoUpload() {
     </div>
   )
 }
+

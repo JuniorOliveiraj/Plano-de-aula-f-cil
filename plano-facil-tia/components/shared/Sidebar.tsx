@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation"
 interface SidebarProps {
   userName: string
   userPlan: string
+  isOpen?: boolean
+  onClose?: () => void
 }
 
 const navItems = [
@@ -53,23 +55,60 @@ const navItems = [
   },
 ]
 
-const planConfig: Record<string, { label: string; color: string; bg: string; dot: string }> = {
-  TRIAL:      { label: "Trial gratuito",   color: "#c2571a", bg: "#fff1ea", dot: "#ff8c00" },
-  PROFESSORA: { label: "Plano Professora", color: "#2e6b35", bg: "#edf7ee", dot: "#4caf50" },
-  ESCOLA:     { label: "Plano Escola",     color: "#1a4f8a", bg: "#e8f1fb", dot: "#2196f3" },
-}
-
-export default function Sidebar({ userName, userPlan }: SidebarProps) {
+export default function Sidebar({ userName, userPlan, isOpen = false, onClose }: SidebarProps) {
   const pathname = usePathname()
-  const plan = planConfig[userPlan] ?? planConfig.TRIAL
   const firstName = userName.split(" ")[0]
+
+  // Planconfig usando variáveis CSS — muda automaticamente com o tema
+  const planLabel: Record<string, string> = {
+    TRIAL:      "Trial gratuito",
+    PROFESSORA: "Plano Professora",
+    ESCOLA:     "Plano Escola",
+  }
+  const plan = planLabel[userPlan] ?? planLabel.TRIAL
+  const planVarColor = userPlan === "PROFESSORA"
+    ? "var(--ds-plan-pro-color)"
+    : userPlan === "ESCOLA"
+    ? "var(--ds-plan-escola-color)"
+    : "var(--ds-plan-trial-color)"
+  const planVarBg = userPlan === "PROFESSORA"
+    ? "var(--ds-plan-pro-bg)"
+    : userPlan === "ESCOLA"
+    ? "var(--ds-plan-escola-bg)"
+    : "var(--ds-plan-trial-bg)"
+  const planDot = userPlan === "PROFESSORA"
+    ? "var(--ds-ink-success)"
+    : userPlan === "ESCOLA"
+    ? "var(--ds-plan-escola-color)"
+    : "var(--ds-primary-bright)"
 
   function isActive(href: string, exact: boolean) {
     return exact ? pathname === href : pathname.startsWith(href)
   }
 
   return (
-    <aside className="flex flex-col h-screen bg-[#ffffff] border-r border-[#fff1ea]" style={{ width: 240, minWidth: 240 }}>
+    <aside
+      className={`flex flex-col h-screen fixed lg:relative z-40 transition-transform duration-300 lg:translate-x-0 ${
+        isOpen ? "translate-x-0" : "-translate-x-full"
+      }`}
+      style={{
+        width: 240,
+        minWidth: 240,
+        backgroundColor: "var(--ds-surface-card)",
+        borderRight: "1px solid var(--ds-surface-low)",
+      }}
+    >
+      {/* ── Botão fechar (só no mobile) ─────────────── */}
+      <button
+        className="lg:hidden absolute top-4 right-4 flex items-center justify-center w-8 h-8 rounded-full transition-colors"
+        style={{ backgroundColor: "var(--ds-surface-low)", color: "var(--ds-terracotta)" }}
+        onClick={onClose}
+        aria-label="Fechar menu"
+      >
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+          <path d="M18 6L6 18M6 6l12 12" />
+        </svg>
+      </button>
 
       {/* ── Logo ───────────────────────────────── */}
       <div className="flex items-center gap-3 px-5 py-6">
@@ -80,13 +119,13 @@ export default function Sidebar({ userName, userPlan }: SidebarProps) {
           📝
         </div>
         <div className="leading-tight">
-          <span className="block text-[15px] font-700 text-[#7c4a2d]">Plano Fácil</span>
-          <span className="block text-[11px] font-700 tracking-[0.07em] uppercase text-[#c2571a]">Tia</span>
+          <span className="block text-[15px] font-700" style={{ color: "var(--ds-terracotta)" }}>Plano Fácil</span>
+          <span className="block text-[11px] font-700 tracking-[0.07em] uppercase" style={{ color: "var(--ds-secondary)" }}>Tia</span>
         </div>
       </div>
 
       {/* ── Divider ────────────────────────────── */}
-      <div className="mx-4 h-px bg-[#fff1ea]" />
+      <div className="mx-4 h-px" style={{ backgroundColor: "var(--ds-surface-low)" }} />
 
       {/* ── Nav ────────────────────────────────── */}
       <nav className="flex flex-col gap-[2px] px-3 py-4 flex-1">
@@ -96,17 +135,18 @@ export default function Sidebar({ userName, userPlan }: SidebarProps) {
             <Link
               key={item.href}
               href={item.href}
-              className="flex items-center gap-3 h-12 px-3 rounded-[12px] text-[15px] font-500 no-underline transition-colors duration-150 group"
+              onClick={onClose}
+              className="flex items-center gap-3 h-12 px-3 rounded-[12px] text-[15px] no-underline transition-colors duration-150 group"
               style={{
-                backgroundColor: active ? "#fff1ea" : "transparent",
-                color:           active ? "#904d00" : "#564334",
+                backgroundColor: active ? "var(--ds-surface-low)" : "transparent",
+                color:           active ? "var(--ds-primary)" : "var(--ds-on-surface-var)",
                 fontWeight:      active ? 600 : 500,
-                borderLeft:      active ? "3px solid #ff8c00" : "3px solid transparent",
+                borderLeft:      active ? "3px solid var(--ds-primary-bright)" : "3px solid transparent",
               }}
-              onMouseEnter={(e) => { if (!active) e.currentTarget.style.backgroundColor = "#fffaf7" }}
+              onMouseEnter={(e) => { if (!active) e.currentTarget.style.backgroundColor = "var(--ds-surface-low)" }}
               onMouseLeave={(e) => { if (!active) e.currentTarget.style.backgroundColor = "transparent" }}
             >
-              <span style={{ color: active ? "#ff8c00" : "#a87b5e" }} className="shrink-0 transition-colors">
+              <span style={{ color: active ? "var(--ds-primary-bright)" : "var(--ds-muted)" }} className="shrink-0 transition-colors">
                 {item.icon}
               </span>
               {item.label}
@@ -117,14 +157,14 @@ export default function Sidebar({ userName, userPlan }: SidebarProps) {
 
       {/* ── Bottom: Plan badge ─────────────────── */}
       <div className="px-3 pb-5 space-y-2">
-        <div className="rounded-[14px] p-3" style={{ backgroundColor: plan.bg }}>
+        <div className="rounded-[14px] p-3" style={{ backgroundColor: planVarBg }}>
           <div className="flex items-center gap-2 mb-1">
-            <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: plan.dot }} />
-            <span className="text-[11px] font-700 uppercase tracking-[0.06em]" style={{ color: plan.color }}>
-              {plan.label}
+            <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: planDot }} />
+            <span className="text-[11px] font-700 uppercase tracking-[0.06em]" style={{ color: planVarColor }}>
+              {plan}
             </span>
           </div>
-          <p className="text-[13px] text-[#564334]">Olá, {firstName}! 👋</p>
+          <p className="text-[13px]" style={{ color: "var(--ds-on-surface-var)" }}>Olá, {firstName}! 👋</p>
         </div>
       </div>
     </aside>

@@ -66,22 +66,23 @@ export default function PassoBncc() {
 
   return (
     <div>
-      <h2 className="text-xl font-medium text-[#7c4a2d] mb-6">
+      <h2 className="text-xl font-medium mb-6" style={{ color: "var(--ds-terracotta)" }}>
         Selecione a habilidade BNCC
       </h2>
 
       {loading && (
         <div className="flex justify-center py-10">
-          <div className="border-4 border-[#ff8c00] border-t-transparent rounded-full w-8 h-8 animate-spin" />
+          <div className="border-4 border-t-transparent rounded-full w-8 h-8 animate-spin" style={{ borderColor: "var(--ds-primary-bright)", borderTopColor: "transparent" }} />
         </div>
       )}
 
       {!loading && erro && (
         <div className="mb-6">
-          <p className="text-sm text-[#ba1a1a] mb-3">{erro}</p>
+          <p className="text-sm mb-3" style={{ color: "var(--ds-ink-error)" }}>{erro}</p>
           <button
             onClick={buscar}
-            className="text-[13px] text-[#c2571a] font-medium underline"
+            className="text-[13px] font-medium underline"
+            style={{ color: "var(--ds-secondary)" }}
           >
             Tentar novamente
           </button>
@@ -89,7 +90,7 @@ export default function PassoBncc() {
       )}
 
       {!loading && !erro && habilidades.length === 0 && (
-        <p className="text-sm text-[#564334] mb-6">
+        <p className="text-sm mb-6" style={{ color: "var(--ds-on-surface-var)" }}>
           Nenhuma habilidade encontrada para essa série e matéria.
         </p>
       )}
@@ -104,11 +105,11 @@ export default function PassoBncc() {
                 onClick={() => setCodigoBncc(h.codigo, h.descricao)}
                 className="rounded-[12px] px-4 py-3 text-left transition"
                 style={{
-                  backgroundColor: selecionado ? "#fff1ea" : "#fff8f5",
-                  outline: selecionado ? "2px solid #ff8c00" : "none",
+                  backgroundColor: selecionado ? "var(--ds-surface-low)" : "var(--ds-surface)",
+                  outline: selecionado ? "2px solid var(--ds-primary-bright)" : "none",
                 }}
               >
-                <span className="text-[13px] text-[#2f1402] text-left">
+                <span className="text-[13px] text-left" style={{ color: "var(--ds-on-surface)" }}>
                   {formatHabilidade(h)}
                 </span>
               </button>
@@ -120,7 +121,8 @@ export default function PassoBncc() {
       {temMais && (
         <button
           onClick={() => setPagina((p) => p + 1)}
-          className="text-[13px] text-[#c2571a] font-medium underline mb-6"
+          className="text-[13px] font-medium underline mb-6"
+          style={{ color: "var(--ds-secondary)" }}
         >
           Carregar mais
         </button>
@@ -129,8 +131,8 @@ export default function PassoBncc() {
       <div className="flex gap-3 mt-6">
         <button
           onClick={voltar}
-          className="h-14 px-6 rounded-[14px] text-[#7c4a2d] font-medium"
-          style={{ backgroundColor: "#fff1ea" }}
+          className="h-14 px-6 rounded-[14px] font-medium"
+          style={{ backgroundColor: "var(--ds-surface-low)", color: "var(--ds-terracotta)" }}
         >
           Voltar
         </button>
@@ -146,3 +148,4 @@ export default function PassoBncc() {
     </div>
   )
 }
+

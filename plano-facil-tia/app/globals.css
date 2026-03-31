@@ -2,14 +2,14 @@
 
 /* ═══════════════════════════════════════════════
    Design System — Hearthside Ledger
-   Plano Fácil Tia · v1.0
+   Plano Fácil Tia · v2.0 (com Dark Mode)
 ════════════════════════════════════════════════ */
 
 @theme {
   /* Tipografia */
   --font-sans: var(--font-jakarta);
 
-  /* Paleta principal */
+  /* Paleta principal (referência estática para Tailwind) */
   --color-primary:             #904d00;
   --color-primary-bright:      #ff8c00;
   --color-surface:             #fff8f5;
@@ -29,16 +29,120 @@
 *, *::before, *::after { box-sizing: border-box; }
 html { height: 100%; }
 
+/* ══════════════════════════════════════════════
+   Tokens de Tema — Modo Claro (padrão)
+   Hearthside Ledger: "café e papel"
+══════════════════════════════════════════════ */
+:root {
+  --ds-surface:           #fff8f5;   /* Level 0 — fundo principal */
+  --ds-surface-low:       #fff1ea;   /* Level 1 — seções, sidebar */
+  --ds-surface-card:      #ffffff;   /* Level 2 — cards */
+  --ds-surface-container: #ffeade;   /* Level 3 — badges, chips */
+  --ds-border:            #f0ddd0;   /* Divisores sutis */
+  --ds-outline-var:       #ddc1ae;   /* Ghost border (inputs) */
+
+  --ds-on-surface:        #2f1402;   /* Texto principal */
+  --ds-on-surface-var:    #564334;   /* Texto secundário */
+  --ds-terracotta:        #7c4a2d;   /* Títulos, ênfase */
+  --ds-muted:             #a87b5e;   /* Texto terciário, placeholders */
+
+  --ds-primary:           #904d00;   /* Ações primárias */
+  --ds-primary-bright:    #ff8c00;   /* Destaques, gradiente */
+  --ds-secondary:         #c2571a;   /* Texto interativo */
+
+  --ds-ink-error:         #ba1a1a;
+  --ds-ink-success:       #2e7d32;
+  --ds-error-bg:          #fde8e8;
+
+  --ds-shadow:            rgba(144,77,0,0.07);
+  --ds-shadow-lg:         rgba(144,77,0,0.14);
+  --ds-topbar-bg:         rgba(255,248,245,0.85);
+
+  /* Plano badges */
+  --ds-plan-trial-color:  #c2571a;
+  --ds-plan-trial-bg:     #fff1ea;
+  --ds-plan-pro-color:    #2e6b35;
+  --ds-plan-pro-bg:       #edf7ee;
+  --ds-plan-escola-color: #1a4f8a;
+  --ds-plan-escola-bg:    #e8f1fb;
+
+  /* Tipo plano (cards) */
+  --ds-tipo-mensal-color: #904d00;
+  --ds-tipo-mensal-bg:    #fff1ea;
+  --ds-tipo-aula-color:   #2e7d32;
+  --ds-tipo-aula-bg:      #edf7ee;
+}
+
+/* ══════════════════════════════════════════════
+   Tokens de Tema — Modo Escuro
+   Hearthside Ledger Dark: "lareira à noite"
+   Mesma alma quente — carvão, não cinza frio.
+══════════════════════════════════════════════ */
+[data-theme="dark"] {
+  --ds-surface:           #1c1007;   /* Level 0 — carvão quente */
+  --ds-surface-low:       #251508;   /* Level 1 — sidebar */
+  --ds-surface-card:      #2e1c0c;   /* Level 2 — cards */
+  --ds-surface-container: #3a2410;   /* Level 3 — badges */
+  --ds-border:            #4a2e16;   /* Divisores */
+  --ds-outline-var:       #5a3820;   /* Ghost border */
+
+  --ds-on-surface:        #f2dfc8;   /* Texto principal — creme quente */
+  --ds-on-surface-var:    #c9a98a;   /* Texto secundário — ocre claro */
+  --ds-terracotta:        #e8956a;   /* Títulos no escuro — terracota luminosa */
+  --ds-muted:             #8a6a50;   /* Texto terciário */
+
+  --ds-primary:           #ff9a2e;   /* Primário invertido — âmbar vibrante */
+  --ds-primary-bright:    #ffb347;   /* Destaque */
+  --ds-secondary:         #e87a4a;   /* Interativo */
+
+  --ds-ink-error:         #ff6b6b;
+  --ds-ink-success:       #66bb6a;
+  --ds-error-bg:          #3a1010;
+
+  --ds-shadow:            rgba(0,0,0,0.3);
+  --ds-shadow-lg:         rgba(0,0,0,0.5);
+  --ds-topbar-bg:         rgba(28,16,7,0.88);
+
+  /* Plano badges — dark */
+  --ds-plan-trial-color:  #e87a4a;
+  --ds-plan-trial-bg:     #3a2410;
+  --ds-plan-pro-color:    #66bb6a;
+  --ds-plan-pro-bg:       #0e2210;
+  --ds-plan-escola-color: #64a8e8;
+  --ds-plan-escola-bg:    #0e1c2e;
+
+  /* Tipo plano (cards) — dark */
+  --ds-tipo-mensal-color: #ff9a2e;
+  --ds-tipo-mensal-bg:    #3a2410;
+  --ds-tipo-aula-color:   #66bb6a;
+  --ds-tipo-aula-bg:      #0e2210;
+}
+
+/* ── Base ───────────────────────────────────── */
 body {
   min-height: 100%;
-  background-color: #fff8f5;
-  color: #2f1402;
+  background-color: var(--ds-surface);
+  color: var(--ds-on-surface);
   font-family: var(--font-jakarta, system-ui, sans-serif);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* ── Scrollbar suave ────────────────────────── */
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #fff1ea; }
-::-webkit-scrollbar-thumb { background: #ddc1ae; border-radius: 999px; }
+::-webkit-scrollbar-track { background: var(--ds-surface-low); }
+::-webkit-scrollbar-thumb { background: var(--ds-outline-var); border-radius: 999px; }
+
+/* ── Transição suave para troca de tema ─────── */
+*, *::before, *::after {
+  transition-property: background-color, border-color, color, box-shadow;
+  transition-duration: 0.25s;
+  transition-timing-function: ease;
+}
+
+/* Reset transition em elementos animados (não interferir com animações existentes) */
+.animate-spin,
+[class*="animate-"] {
+  transition: none;
+}

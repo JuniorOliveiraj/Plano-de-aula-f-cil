@@ -34,7 +34,7 @@ export default function PassoMateria() {
 
   return (
     <div>
-      <h2 className="text-xl font-medium text-[#7c4a2d] mb-6">Escolha a matéria</h2>
+      <h2 className="text-xl font-medium mb-6" style={{ color: "var(--ds-terracotta)" }}>Escolha a matéria</h2>
 
       <div className="grid grid-cols-2 gap-3 mb-4">
         {materias.map((m) => (
@@ -43,9 +43,9 @@ export default function PassoMateria() {
             onClick={() => selecionar(m)}
             className="h-14 rounded-2xl text-base font-medium transition"
             style={{
-              backgroundColor: materia === m && !usandoOutra ? "#fff1ea" : "#fff8f5",
-              color: materia === m && !usandoOutra ? "#2f1402" : "#564334",
-              outline: materia === m && !usandoOutra ? "2px solid #ff8c00" : "none",
+              backgroundColor: materia === m && !usandoOutra ? "var(--ds-surface-low)" : "var(--ds-surface)",
+              color: materia === m && !usandoOutra ? "var(--ds-on-surface)" : "var(--ds-on-surface-var)",
+              outline: materia === m && !usandoOutra ? "2px solid var(--ds-primary-bright)" : "none",
             }}
           >
             {m}
@@ -57,12 +57,12 @@ export default function PassoMateria() {
       <div
         className="rounded-2xl p-4 mb-8 cursor-pointer transition"
         style={{
-          backgroundColor: usandoOutra ? "#fff1ea" : "#fff8f5",
-          outline: usandoOutra ? "2px solid #ff8c00" : "none",
+          backgroundColor: usandoOutra ? "var(--ds-surface-low)" : "var(--ds-surface)",
+          outline: usandoOutra ? "2px solid var(--ds-primary-bright)" : "none",
         }}
         onClick={selecionarOutra}
       >
-        <p className="text-sm font-medium text-[#7c4a2d] mb-2">Outra matéria</p>
+        <p className="text-sm font-medium mb-2" style={{ color: "var(--ds-terracotta)" }}>Outra matéria</p>
         <input
           type="text"
           maxLength={40}
@@ -74,15 +74,16 @@ export default function PassoMateria() {
             setUsandoOutra(true)
             setMateria(e.target.value)
           }}
-          className="w-full bg-transparent text-[#2f1402] outline-none text-sm placeholder:text-[#a87b5e]"
+          className="w-full bg-transparent outline-none text-sm"
+          style={{ color: "var(--ds-on-surface)" }}
         />
       </div>
 
       <div className="flex gap-3">
         <button
           onClick={voltar}
-          className="h-14 px-6 rounded-[14px] text-[#7c4a2d] font-medium transition"
-          style={{ backgroundColor: "#fff1ea" }}
+          className="h-14 px-6 rounded-[14px] font-medium transition"
+          style={{ backgroundColor: "var(--ds-surface-low)", color: "var(--ds-terracotta)" }}
         >
           Voltar
         </button>
@@ -98,3 +99,4 @@ export default function PassoMateria() {
     </div>
   )
 }
+

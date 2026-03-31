@@ -22,7 +22,7 @@ export default function PassoDuracao() {
 
   return (
     <div>
-      <h2 className="text-xl font-medium text-[#7c4a2d] mb-6">
+      <h2 className="text-xl font-medium mb-6" style={{ color: "var(--ds-terracotta)" }}>
         Qual é a duração da aula?
       </h2>
 
@@ -33,28 +33,29 @@ export default function PassoDuracao() {
             onClick={() => { setDuracao(op.valor); avancar() }}
             className="flex flex-col items-start gap-2 p-5 rounded-2xl text-left transition"
             style={{
-              backgroundColor: duracao === op.valor ? "#fff1ea" : "#fff8f5",
-              outline: duracao === op.valor ? "2px solid #ff8c00" : "none",
+              backgroundColor: duracao === op.valor ? "var(--ds-surface-low)" : "var(--ds-surface)",
+              outline: duracao === op.valor ? "2px solid var(--ds-primary-bright)" : "none",
             }}
           >
             <span className="text-2xl">{op.emoji}</span>
-            <p className="text-[15px] font-semibold text-[#2f1402]">{op.titulo}</p>
-            <p className="text-[13px] text-[#7c4a2d]">{op.descricao}</p>
+            <p className="text-[15px] font-semibold" style={{ color: "var(--ds-on-surface)" }}>{op.titulo}</p>
+            <p className="text-[13px]" style={{ color: "var(--ds-terracotta)" }}>{op.descricao}</p>
           </button>
         ))}
       </div>
 
-      <p className="text-xs text-[#a87b5e] mb-6">
+      <p className="text-xs mb-6" style={{ color: "var(--ds-muted)" }}>
         Você pode avançar sem selecionar — o padrão é 45 minutos.
       </p>
 
       <button
         onClick={voltar}
-        className="h-14 px-6 rounded-[14px] text-[#7c4a2d] font-medium"
-        style={{ backgroundColor: "#fff1ea" }}
+        className="h-14 px-6 rounded-[14px] font-medium"
+        style={{ backgroundColor: "var(--ds-surface-low)", color: "var(--ds-terracotta)" }}
       >
         Voltar
       </button>
     </div>
   )
 }
+
