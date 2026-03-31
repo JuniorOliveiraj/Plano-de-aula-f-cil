@@ -1,6 +1,7 @@
 "use client"
 
 import { signIn, useSession } from "next-auth/react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 
@@ -130,9 +131,9 @@ export default function CadastroPage() {
 
         <p className="mt-8 text-sm text-[#564334]">
           Já tem conta?{" "}
-          <a href="/login" className="text-[#c2571a] font-medium">
+          <Link href="/login" className="text-[#c2571a] font-medium">
             Entrar
-          </a>
+          </Link>
         </p>
       </div>
     </div>

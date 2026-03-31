@@ -61,26 +61,26 @@ export default function Sidebar({ userName, userPlan, isOpen = false, onClose }:
 
   // Planconfig usando variáveis CSS — muda automaticamente com o tema
   const planLabel: Record<string, string> = {
-    TRIAL:      "Trial gratuito",
+    TRIAL: "Trial gratuito",
     PROFESSORA: "Plano Professora",
-    ESCOLA:     "Plano Escola",
+    ESCOLA: "Plano Escola",
   }
   const plan = planLabel[userPlan] ?? planLabel.TRIAL
   const planVarColor = userPlan === "PROFESSORA"
     ? "var(--ds-plan-pro-color)"
     : userPlan === "ESCOLA"
-    ? "var(--ds-plan-escola-color)"
-    : "var(--ds-plan-trial-color)"
+      ? "var(--ds-plan-escola-color)"
+      : "var(--ds-plan-trial-color)"
   const planVarBg = userPlan === "PROFESSORA"
     ? "var(--ds-plan-pro-bg)"
     : userPlan === "ESCOLA"
-    ? "var(--ds-plan-escola-bg)"
-    : "var(--ds-plan-trial-bg)"
+      ? "var(--ds-plan-escola-bg)"
+      : "var(--ds-plan-trial-bg)"
   const planDot = userPlan === "PROFESSORA"
     ? "var(--ds-ink-success)"
     : userPlan === "ESCOLA"
-    ? "var(--ds-plan-escola-color)"
-    : "var(--ds-primary-bright)"
+      ? "var(--ds-plan-escola-color)"
+      : "var(--ds-primary-bright)"
 
   function isActive(href: string, exact: boolean) {
     return exact ? pathname === href : pathname.startsWith(href)
@@ -88,9 +88,8 @@ export default function Sidebar({ userName, userPlan, isOpen = false, onClose }:
 
   return (
     <aside
-      className={`flex flex-col h-screen fixed lg:relative z-40 transition-transform duration-300 lg:translate-x-0 ${
-        isOpen ? "translate-x-0" : "-translate-x-full"
-      }`}
+      className={`flex flex-col h-screen fixed lg:relative z-40 transition-transform duration-300 lg:translate-x-0 ${isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
       style={{
         width: 240,
         minWidth: 240,
@@ -116,7 +115,11 @@ export default function Sidebar({ userName, userPlan, isOpen = false, onClose }:
           className="flex items-center justify-center rounded-[10px] text-lg shrink-0"
           style={{ width: 38, height: 38, background: "linear-gradient(135deg,#904d00,#ff8c00)" }}
         >
-          📝
+          <img
+            src="/imgs/Logo.png"
+            alt="Pix"
+            className="w-6 h-6 object-contain"
+          />
         </div>
         <div className="leading-tight">
           <span className="block text-[15px] font-700" style={{ color: "var(--ds-terracotta)" }}>Plano Fácil</span>
@@ -139,9 +142,9 @@ export default function Sidebar({ userName, userPlan, isOpen = false, onClose }:
               className="flex items-center gap-3 h-12 px-3 rounded-[12px] text-[15px] no-underline transition-colors duration-150 group"
               style={{
                 backgroundColor: active ? "var(--ds-surface-low)" : "transparent",
-                color:           active ? "var(--ds-primary)" : "var(--ds-on-surface-var)",
-                fontWeight:      active ? 600 : 500,
-                borderLeft:      active ? "3px solid var(--ds-primary-bright)" : "3px solid transparent",
+                color: active ? "var(--ds-primary)" : "var(--ds-on-surface-var)",
+                fontWeight: active ? 600 : 500,
+                borderLeft: active ? "3px solid var(--ds-primary-bright)" : "3px solid transparent",
               }}
               onMouseEnter={(e) => { if (!active) e.currentTarget.style.backgroundColor = "var(--ds-surface-low)" }}
               onMouseLeave={(e) => { if (!active) e.currentTarget.style.backgroundColor = "transparent" }}

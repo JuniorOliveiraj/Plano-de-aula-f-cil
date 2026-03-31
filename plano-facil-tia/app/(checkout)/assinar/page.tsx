@@ -15,12 +15,12 @@ export default async function AssinarPage() {
 
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: { plano: true, ativo: true },
+    select: { name: true, plano: true, ativo: true },
   })
 
   if (user?.plano === "PROFESSORA" && user?.ativo === true) {
     redirect("/dashboard")
   }
 
-  return <AssinarForm preco={PRECO_ASSINATURA} />
+  return <AssinarForm preco={PRECO_ASSINATURA} userName={user?.name || ""} />
 }

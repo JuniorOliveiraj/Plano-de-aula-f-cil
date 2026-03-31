@@ -53,7 +53,7 @@ export class AssinaturaService {
   }
 
   /**
-   * Inicia uma assinatura recorrente mensal de R$19,90.
+   * Inicia uma assinatura recorrente mensal de R$xx,xx.
    * Ignora qualquer campo valor/plano/amount do input — usa constantes server-side.
    * Retorna resultado sem expor asaasCustomerId ou asaasSubscriptionId.
    */

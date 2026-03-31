@@ -15,6 +15,7 @@ interface Props {
 }
 
 export default function ResultadoClient({ planoId, serie, materia, tipo, aulas, createdAt, codigoBncc }: Props) {
+  const [showFull, setShowFull] = useState(false)
   const [baixando, setBaixando] = useState(false)
 
   const data = new Date(createdAt).toLocaleDateString("pt-BR", {
@@ -40,7 +41,7 @@ export default function ResultadoClient({ planoId, serie, materia, tipo, aulas, 
     }
   }
 
-  const preview = aulas.slice(0, 3)
+  const displayedAulas = showFull ? aulas : aulas.slice(0, 3)
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
@@ -60,10 +61,22 @@ export default function ResultadoClient({ planoId, serie, materia, tipo, aulas, 
 
       {/* Preview da tabela */}
       <div className="rounded-[20px] overflow-hidden" style={{ backgroundColor: "var(--ds-surface-card)", boxShadow: "0 4px 20px var(--ds-shadow)", border: "1px solid var(--ds-border)" }}>
-        <div className="px-6 py-4" style={{ borderBottom: "1px solid var(--ds-border)" }}>
+        <div className="px-6 py-4 flex items-center justify-between" style={{ borderBottom: "1px solid var(--ds-border)" }}>
           <p className="text-[15px] font-600" style={{ color: "var(--ds-on-surface)" }}>
-            Preview — primeiras {preview.length} aulas
+            {showFull ? "Plano Completo" : `Preview — primeiras ${displayedAulas.length} aulas`}
           </p>
+          {aulas.length > 3 && (
+            <button
+              onClick={() => setShowFull(!showFull)}
+              className="text-[13px] font-bold flex items-center gap-1 transition-colors hover:opacity-70"
+              style={{ color: "var(--ds-terracotta)" }}
+            >
+              <span>{showFull ? "Ocultar" : "Mostrar tudo"}</span>
+              <span className={`material-symbols-outlined text-[18px] transition-transform ${showFull ? "rotate-180" : ""}`}>
+                expand_more
+              </span>
+            </button>
+          )}
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -77,7 +90,7 @@ export default function ResultadoClient({ planoId, serie, materia, tipo, aulas, 
               </tr>
             </thead>
             <tbody>
-              {preview.map((aula, i) => (
+              {displayedAulas.map((aula, i) => (
                 <tr key={i} style={{ borderTop: "1px solid var(--ds-border)" }}>
                   <td className="px-4 py-3 font-600 whitespace-nowrap" style={{ color: "var(--ds-secondary)" }}>
                     {codigoBncc ?? "—"}
@@ -90,10 +103,15 @@ export default function ResultadoClient({ planoId, serie, materia, tipo, aulas, 
             </tbody>
           </table>
         </div>
-        {aulas.length > 3 && (
-          <p className="text-center text-[13px] py-3" style={{ color: "var(--ds-muted)" }}>
-            + {aulas.length - 3} aulas no arquivo completo
-          </p>
+        {!showFull && aulas.length > 3 && (
+          <button
+            onClick={() => setShowFull(true)}
+            className="w-full py-4 text-[13px] font-bold flex items-center justify-center gap-2 transition-all hover:bg-[var(--ds-surface-low)]"
+            style={{ color: "var(--ds-terracotta)", borderTop: "1px solid var(--ds-border)" }}
+          >
+            <span className="material-symbols-outlined text-[20px]">visibility</span>
+            <span>Ver mais {aulas.length - 3} aulas</span>
+          </button>
         )}
       </div>
 

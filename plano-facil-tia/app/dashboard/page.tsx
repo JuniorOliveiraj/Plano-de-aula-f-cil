@@ -161,7 +161,7 @@ export default async function DashboardPage() {
         >
           <div>
             <p className="text-[15px] font-600" style={{ color: "var(--ds-terracotta)" }}>Gostando do Plano Fácil Tia? 💛</p>
-            <p className="text-[13px] mt-0.5" style={{ color: "var(--ds-muted)" }}>Assine o plano Professora por R$19,90/mês e gere até 15 planos por mês.</p>
+            <p className="text-[13px] mt-0.5" style={{ color: "var(--ds-muted)" }}>Assine o plano Professora por R$${process.env.NEXT_PUBLIC_PRECO_MENSAL}/mês e gere até 15 planos por mês.</p>
           </div>
           <Link
             href="/assinar"

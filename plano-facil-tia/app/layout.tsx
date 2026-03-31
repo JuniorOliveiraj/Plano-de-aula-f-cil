@@ -7,12 +7,12 @@ import "./globals.css"
 const jakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   variable: "--font-jakarta",
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 })
 
 export const metadata: Metadata = {
-  title: "Plano Fácil Tia — Planos de aula em 1 minuto",
+  title: "Plano Fácil — Planos de aula em 1 minuto",
   description:
     "Gere planos de aula completos para o ensino fundamental em menos de 1 minuto. Envie o PDF do livro e receba o plano em Word pronto para entregar.",
 }
@@ -38,6 +38,7 @@ export default function RootLayout({
       <head>
         {/* Script anti-flash — deve ser o primeiro script executado */}
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=block" />
       </head>
       <body>
         <ThemeProvider>

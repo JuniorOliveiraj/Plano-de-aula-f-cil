@@ -177,8 +177,8 @@ describe("Property 1: Idempotência de criação de cliente Asaas", () => {
 // ---------------------------------------------------------------------------
 
 describe("Properties 2, 3, 4: iniciarAssinatura", () => {
-  it("Property 2: valor da assinatura é sempre R$19,90", async () => {
-    // Feature: integracao-pagamentos, Property 2: Valor da assinatura é sempre R$19,90
+  it(`Property 2: valor da assinatura é sempre R$${process.env.NEXT_PUBLIC_PRECO_MENSAL}`, async () => {
+    // Feature: integracao-pagamentos, Property 2: Valor da assinatura é sempre R$xx,xx
     const { AssinaturaService } = await vi.importActual<typeof import("../lib/assinatura")>("../lib/assinatura")
 
     await fc.assert(

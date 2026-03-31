@@ -76,6 +76,19 @@ export class AsaasClient {
     }
   }
 
+  private async parseAsaasError(response: Response, action: string): Promise<Error> {
+    try {
+      const body = await response.json() as { errors?: Array<{ code: string, description: string }> }
+      if (body.errors && body.errors.length > 0) {
+        // Retorna a primeira descrição de erro encontrada
+        return new Error(body.errors[0].description)
+      }
+      return new Error(`Asaas ${action} falhou com HTTP ${response.status}`)
+    } catch {
+      return new Error(`Asaas ${action} falhou com HTTP ${response.status}`)
+    }
+  }
+
   async criarCliente(input: AsaasClienteInput): Promise<{ id: string }> {
     const response = await this.fetchWithTimeout(`${this.baseUrl}/customers`, {
       method: "POST",
@@ -87,10 +100,7 @@ export class AsaasClient {
     })
 
     if (!response.ok) {
-      const body = await response.text()
-      throw new Error(
-        `Asaas criarCliente falhou com HTTP ${response.status}: ${body}`
-      )
+      throw await this.parseAsaasError(response, "criarCliente")
     }
 
     return response.json()
@@ -115,10 +125,7 @@ export class AsaasClient {
     })
 
     if (!response.ok) {
-      const body = await response.text()
-      throw new Error(
-        `Asaas criarAssinatura falhou com HTTP ${response.status}: ${body}`
-      )
+      throw await this.parseAsaasError(response, "criarAssinatura")
     }
 
     return response.json()
@@ -131,10 +138,7 @@ export class AsaasClient {
     )
 
     if (!response.ok) {
-      const body = await response.text()
-      throw new Error(
-        `Asaas cancelarAssinatura falhou com HTTP ${response.status}: ${body}`
-      )
+      throw await this.parseAsaasError(response, "cancelarAssinatura")
     }
   }
 
