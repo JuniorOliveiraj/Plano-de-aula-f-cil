@@ -1,6 +1,11 @@
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib"
 import type { PlanoGerado } from "@/lib/validations"
 
+// Retorna o código BNCC da aula, com fallback para o campo legado do plano
+function bnccDaAula(aula: PlanoGerado["aulas"][number], plano: PlanoGerado): string {
+  return aula.codigoBncc || plano.codigoBncc || "—"
+}
+
 // Cores neutras focadas em impressão escolar padrão
 const COR_TEXTO = rgb(0, 0, 0)
 const COR_HEADER_BG = rgb(0.9, 0.9, 0.9) // Cinza claro para o fundo do cabeçalho da tabela
@@ -81,9 +86,9 @@ export async function gerarPdf(plano: PlanoGerado): Promise<Buffer> {
     const row = [
       `${aula.data}\n${plano.materia}`,
       aula.objetivo,
-      plano.codigoBncc ?? "—",
+      bnccDaAula(aula, plano),
       aula.metodologia,
-      "Atividades no caderno.\nParticipação de cada aluno.", 
+      "Atividades no caderno.\nParticipação de cada aluno.",
     ]
 
     // Calcula a quantidade de linhas que o texto vai ocupar para definir a altura da célula

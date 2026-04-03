@@ -7,32 +7,31 @@ import { PDFDocument } from "pdf-lib"
 import { useWizardStore } from "@/store/wizardStore"
 
 const ERROS: Record<string, string> = {
-  TRIAL_EXPIRADO: "Seu período gratuito acabou. Assine para continuar gerando planos!",
-  LIMITE_TRIAL: "Você usou todos os planos do trial. Assine para continuar!",
-  LIMITE_MENSAL: "Você usou todos os planos do mês. Aguarde a renovação.",
-  LIMITE_DIARIO: "Você já gerou 5 planos hoje. Volta amanhã para continuar!",
-  FALHA_GERACAO: "Algo deu errado. Clica em 'Tentar novamente' que a gente resolve!",
-  PDF_INVALIDO: "Não consegui abrir esse PDF. Tenta outro arquivo.",
-  PDF_MUITO_GRANDE: "Arquivo muito grande, tia. Use um PDF de até 20MB.",
+  TRIAL_EXPIRADO:  "Seu período gratuito acabou. Assine para continuar gerando planos!",
+  LIMITE_TRIAL:    "Você usou todos os planos do trial. Assine para continuar!",
+  LIMITE_MENSAL:   "Você usou todos os planos do mês. Aguarde a renovação.",
+  LIMITE_DIARIO:   "Você já gerou 5 planos hoje. Volta amanhã para continuar!",
+  FALHA_GERACAO:   "Algo deu errado. Clica em 'Tentar novamente' que a gente resolve!",
+  PDF_INVALIDO:    "Não consegui abrir esse PDF. Tenta outro arquivo.",
+  PDF_MUITO_GRANDE:"Arquivo muito grande, tia. Use um PDF de até 20MB.",
+  QUOTA_EXCEDIDA:  "A IA atingiu o limite de uso hoje. Tente novamente em alguns minutos ou amanhã.",
 }
 
 // Etapas COM_PDF — comportamento original (soma = 100)
 const ETAPAS = [
   { label: "Preparando o PDF", peso: 10, duracao: 3000 },
   { label: "Enviando para a IA", peso: 20, duracao: 8000 },
-  { label: "Criando as aulas", peso: 55, duracao: 90000 },
-  { label: "Montando o Word", peso: 15, duracao: 5000 },
+  { label: "Criando as aulas", peso: 70, duracao: 90000 },
 ]
 
 // Etapas SEM_PDF — sem "Preparando o PDF" (soma = 100)
 const ETAPAS_SEM_PDF = [
   { label: "Enviando para a IA", peso: 25, duracao: 8000 },
-  { label: "Criando as aulas", peso: 60, duracao: 90000 },
-  { label: "Montando o Word", peso: 15, duracao: 5000 },
+  { label: "Criando as aulas", peso: 75, duracao: 90000 },
 ]
 
 // Timeout total: 3 minutos
-const TIMEOUT_MS = 180_000
+const TIMEOUT_MS = 260_000
 
 async function cortarPdf(file: File, pagDe: string, pagAte: string): Promise<File> {
   const arrayBuffer = await file.arrayBuffer()
@@ -57,8 +56,14 @@ export default function PassoRevisao() {
   const router = useRouter()
   const {
     serie, materia, tipo, pagDe, pagAte, pdfFile, voltar, resetar,
-    modo, tema, codigoBncc, descricaoBncc, duracao, dataAula,
+    modo, tema, codigoBncc, descricaoBncc, codigosBncc, descricoesBncc,
+    duracao, dataAula, mesReferencia,
   } = useWizardStore()
+
+  // Para multi: usa arrays; para AULA_UNICA: usa campos únicos
+  const isMulti = tipo !== "AULA_UNICA"
+  const codigosFinais  = isMulti ? codigosBncc  : (codigoBncc  ? [codigoBncc]  : [])
+  const descricoesFinais = isMulti ? descricoesBncc : (descricaoBncc ? [descricaoBncc] : [])
 
   const [gerando, setGerando] = useState(false)
   const [etapaIdx, setEtapaIdx] = useState(0)
@@ -72,7 +77,7 @@ export default function PassoRevisao() {
   const progressRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const etapas = modo === "SEM_PDF" ? ETAPAS_SEM_PDF : ETAPAS
-  const tipoLabel = tipo === "MENSAL" ? "Plano Mensal" : "Aula Única"
+  const tipoLabel = tipo === "MENSAL" ? "Plano Mensal" : tipo === "QUINZENAL" ? "Plano Quinzenal" : "Aula Única"
   const temPaginas = modo !== "SEM_PDF" && tipo === "AULA_UNICA" && pagDe && pagAte
 
   // Limpa todos os timers
@@ -131,7 +136,7 @@ export default function PassoRevisao() {
 
         console.log("[PassoRevisao/SEM_PDF] iniciando geração", { serie, materia, tipo, tema, codigoBncc: codigoBncc?.slice(0, 10), duracao })
 
-        if (!serie || !materia || !tipo || !tema || !codigoBncc) {
+        if (!serie || !materia || !tipo || !tema || !codigosFinais.length) {
           limparTimers()
           setErro("Dados incompletos. Volte e preencha todos os campos.")
           setGerando(false)
@@ -141,30 +146,54 @@ export default function PassoRevisao() {
         // Etapa 1 — IA processando (avança após 3s do envio)
         timerRef.current = setTimeout(() => avancarEtapa(1), 3000)
 
-        // Se veio do calendário (dataAula preenchido), usar a API do calendário
-        const veioDoCal = Boolean(dataAula)
+        // Se veio do calendário (dataAula preenchido = AULA_UNICA) ou é MENSAL/QUINZENAL sem PDF
+        const veioDoCal = Boolean(dataAula) || tipo === "MENSAL" || tipo === "QUINZENAL"
 
         let res: Response
         if (veioDoCal) {
-          res = await fetch("/api/calendario/planos", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ serie, materia, tipo, tema, codigoBncc, descricaoBncc, duracao, dataAula }),
-          })
+          const controller = new AbortController()
+          const tid = setTimeout(() => controller.abort(), 250_000)
+          try {
+            res = await fetch("/api/calendario/planos", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                serie, materia, tipo, tema,
+                codigoBncc: codigosFinais.join(", "),
+                descricaoBncc: descricoesFinais.join("; "),
+                codigosBncc: codigosFinais,
+                descricoesBncc: descricoesFinais,
+                duracao, dataAula, mesReferencia,
+              }),
+              signal: controller.signal,
+            })
+          } finally {
+            clearTimeout(tid)
+          }
         } else {
-          res = await fetch("/api/gerar-plano", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ serie, materia, tipo, tema, codigoBncc, descricaoBncc, duracao }),
-          })
+          const controller = new AbortController()
+          const tid = setTimeout(() => controller.abort(), 250_000)
+          try {
+            res = await fetch("/api/gerar-plano", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                serie, materia, tipo, tema,
+                codigoBncc: codigosFinais.join(", "),
+                descricaoBncc: descricoesFinais.join("; "),
+                codigosBncc: codigosFinais,
+                descricoesBncc: descricoesFinais,
+                duracao,
+              }),
+              signal: controller.signal,
+            })
+          } finally {
+            clearTimeout(tid)
+          }
         }
 
         console.log("[PassoRevisao/SEM_PDF] resposta recebida", res.status)
         const data = await res.json()
-
-        // Etapa 2 — montando Word
-        avancarEtapa(2)
-        setProgresso(85)
 
         limparTimers()
 
@@ -209,12 +238,15 @@ export default function PassoRevisao() {
         // Etapa 2 — IA processando (avança após 3s do envio)
         timerRef.current = setTimeout(() => avancarEtapa(2), 3000)
 
-        const res = await fetch("/api/gerar-plano", { method: "POST", body: formData })
+        const controller = new AbortController()
+        const tid = setTimeout(() => controller.abort(), 250_000)
+        let res: Response
+        try {
+          res = await fetch("/api/gerar-plano", { method: "POST", body: formData, signal: controller.signal })
+        } finally {
+          clearTimeout(tid)
+        }
         const data = await res.json()
-
-        // Etapa 3 — montando Word
-        avancarEtapa(3)
-        setProgresso(85)
 
         limparTimers()
 
@@ -323,7 +355,15 @@ export default function PassoRevisao() {
             className="mt-6 px-4 py-3 rounded-[12px] text-[13px] text-left w-full"
             style={{ backgroundColor: "var(--ds-warning-bg)", color: "var(--ds-ink-warning)" }}
           >
-            ⏳ Está demorando um pouco mais que o normal. Pode levar até 3 minutos para planos mensais. Aguarde mais um pouco!
+            ⏳ A IA está trabalhando duro! Planos mensais podem levar até 2 minutos. Aguarde mais um pouco.
+          </div>
+        )}
+        {tempoDecorrido >= 120 && (
+          <div
+            className="mt-2 px-4 py-3 rounded-[12px] text-[13px] text-left w-full"
+            style={{ backgroundColor: "var(--ds-surface-low)", color: "var(--ds-muted)" }}
+          >
+            🔄 Se a IA não respondeu na primeira tentativa, ela tenta automaticamente mais 2 vezes. Isso é normal!
           </div>
         )}
       </div>
@@ -336,9 +376,14 @@ export default function PassoRevisao() {
       { label: "Série", value: serie },
       { label: "Matéria", value: materia },
       { label: "Tipo", value: tipoLabel },
+      ...(tipo === "MENSAL" && mesReferencia ? [{ label: "Mês", value: mesReferencia }] : []),
+      ...(tipo === "QUINZENAL" && mesReferencia ? [{ label: "Mês", value: mesReferencia }] : []),
       ...(tipo === "AULA_UNICA" && dataAula ? [{ label: "Data da aula", value: dataAula }] : []),
       { label: "Tema", value: tema },
-      { label: "Código BNCC", value: codigoBncc || "—" },
+      {
+        label: isMulti ? `BNCC (${codigosFinais.length})` : "Código BNCC",
+        value: codigosFinais.length > 0 ? codigosFinais.join(", ") : "—",
+      },
       { label: "Duração", value: `${duracao} minutos` },
     ]
     : [

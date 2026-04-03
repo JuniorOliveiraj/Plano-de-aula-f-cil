@@ -79,6 +79,56 @@ export default function CalendarioShell() {
   const [planos, setPlanos] = useState<PlanoCalendarioResumo[]>([])
   const [carregando, setCarregando] = useState(false)
   const [aulaModal, setAulaModal] = useState<AulaModal | null>(null)
+  const [menuDownload, setMenuDownload] = useState(false)
+
+  const labelPeriodo: Record<Visualizacao, string> = {
+    diaria: "Dia",
+    semanal: "Semana",
+    mensal: "Mês",
+  }
+
+  function datasParaPeriodo(): string[] {
+    function fmt(d: Date) {
+      return `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}/${d.getFullYear()}`
+    }
+    if (visualizacao === "diaria") return [fmt(diaAtual)]
+    if (visualizacao === "semanal") {
+      return Array.from({ length: 7 }, (_, i) => {
+        const d = new Date(semanaInicio)
+        d.setDate(semanaInicio.getDate() + i)
+        return fmt(d)
+      })
+    }
+    // mensal
+    const totalDias = new Date(ano, mes, 0).getDate()
+    return Array.from({ length: totalDias }, (_, i) => {
+      const d = new Date(ano, mes - 1, i + 1)
+      return fmt(d)
+    })
+  }
+
+  async function handleDownload(formato: "word" | "pdf") {
+    setMenuDownload(false)
+    const datas = datasParaPeriodo()
+    const params = new URLSearchParams({
+      formato,
+      datas: datas.join(","),
+      titulo,
+    })
+    try {
+      const res = await fetch(`/api/calendario/download?${params}`)
+      if (!res.ok) { alert("Nenhuma aula encontrada para este período."); return }
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = `calendario_${titulo.replace(/\s+/g,"_")}.${formato === "pdf" ? "pdf" : "docx"}`
+      a.click()
+      URL.revokeObjectURL(url)
+    } catch {
+      alert("Erro ao baixar. Tenta de novo!")
+    }
+  }
 
   // Busca planos de um ou dois meses (quando semana cruza meses)
   const buscarPlanos = useCallback(async (m: number, a: number, m2?: number, a2?: number) => {
@@ -109,6 +159,21 @@ export default function CalendarioShell() {
     }
   }, [])
 
+  // Ao trocar para mensal, garantir que mes/ano reflitam o dia atual da semana visível
+  // (não o domingo de início que pode ser do mês anterior)
+  useEffect(() => {
+    if (visualizacao === "mensal") {
+      // Usar a quinta-feira da semana atual como âncora (sempre cai no mês "principal" da semana)
+      const ancora = new Date(semanaInicio)
+      ancora.setDate(semanaInicio.getDate() + 4) // domingo + 4 = quinta
+      const m = ancora.getMonth() + 1
+      const a = ancora.getFullYear()
+      setMes(m)
+      setAno(a)
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visualizacao])
+
   // Buscar ao montar e ao mudar mês/ano (visão mensal e diária)
   useEffect(() => {
     if (visualizacao !== "semanal") {
@@ -127,10 +192,6 @@ export default function CalendarioShell() {
     const a1 = inicio.getFullYear()
     const m2 = fim.getMonth() + 1
     const a2 = fim.getFullYear()
-
-    // Atualizar mes/ano para o mês do início da semana (para navegação)
-    setMes(m1)
-    setAno(a1)
 
     buscarPlanos(m1, a1, m2, a2)
   }, [semanaInicio, visualizacao, buscarPlanos])
@@ -284,34 +345,106 @@ export default function CalendarioShell() {
             </button>
           </div>
 
-          {/* Seletor de visualização */}
-          <div
-            className="flex rounded-[8px] overflow-hidden"
-            style={{ border: "1px solid var(--ds-border)" }}
-          >
-            {(["mensal", "semanal", "diaria"] as Visualizacao[]).map((v) => {
-              const labels: Record<Visualizacao, string> = {
-                mensal: "Mensal",
-                semanal: "Semanal",
-                diaria: "Diária",
-              }
-              const ativo = visualizacao === v
-              return (
-                <button
-                  key={v}
-                  onClick={() => setVisualizacao(v)}
-                  className="h-8 px-4 text-[12px] font-600 transition-colors"
-                  style={{
-                    backgroundColor: ativo ? "var(--ds-primary)" : "transparent",
-                    color: ativo ? "#fff" : "var(--ds-on-surface)",
-                  }}
-                >
-                  {labels[v]}
-                </button>
-              )
-            })}
-          </div>
-        </div>
+          {/* Seletor de visualização + Botão download */}
+          <div className="flex items-center gap-2">
+            <div
+              className="flex rounded-[8px] overflow-hidden"
+              style={{ border: "1px solid var(--ds-border)" }}
+            >
+              {(["mensal", "semanal", "diaria"] as Visualizacao[]).map((v) => {
+                const labels: Record<Visualizacao, string> = {
+                  mensal: "Mensal",
+                  semanal: "Semanal",
+                  diaria: "Diária",
+                }
+                const ativo = visualizacao === v
+                return (
+                  <button
+                    key={v}
+                    onClick={() => setVisualizacao(v)}
+                    className="h-8 px-4 text-[12px] font-600 transition-colors"
+                    style={{
+                      backgroundColor: ativo ? "var(--ds-primary)" : "transparent",
+                      color: ativo ? "#fff" : "var(--ds-on-surface)",
+                    }}
+                  >
+                    {labels[v]}
+                  </button>
+                )
+              })}
+            </div>
+
+            {/* Botão Baixar com dropdown */}
+            <div className="relative">
+              <button
+                onClick={() => setMenuDownload((v) => !v)}
+                className="flex items-center gap-1.5 h-8 px-3 rounded-[8px] text-[12px] font-600 transition-colors"
+                style={{
+                  backgroundColor: "var(--ds-surface-low)",
+                  color: "var(--ds-on-surface)",
+                  border: "1px solid var(--ds-border)",
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "var(--ds-border)" }}
+                onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "var(--ds-surface-low)" }}
+              >
+                <svg width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" />
+                  <polyline points="7 10 12 15 17 10" />
+                  <line x1="12" y1="15" x2="12" y2="3" />
+                </svg>
+                Baixar ({labelPeriodo[visualizacao]})
+                <svg width="10" height="10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </button>
+
+              {menuDownload && (
+                <>
+                  {/* overlay para fechar ao clicar fora */}
+                  <div className="fixed inset-0 z-10" onClick={() => setMenuDownload(false)} />
+                  <div
+                    className="absolute right-0 top-full mt-1 z-20 rounded-[8px] overflow-hidden flex flex-col"
+                    style={{
+                      backgroundColor: "var(--ds-surface-card)",
+                      border: "1px solid var(--ds-border)",
+                      boxShadow: "0 4px 12px var(--ds-shadow)",
+                      minWidth: 160,
+                    }}
+                  >
+                    <button
+                      onClick={() => handleDownload("pdf")}
+                      className="flex items-center gap-2 px-4 py-2.5 text-[13px] text-left transition-colors"
+                      style={{ color: "var(--ds-on-surface)" }}
+                      onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "var(--ds-surface-low)" }}
+                      onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent" }}
+                    >
+                      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                      </svg>
+                      Exportar PDF
+                    </button>
+                    <button
+                      onClick={() => handleDownload("word")}
+                      className="flex items-center gap-2 px-4 py-2.5 text-[13px] text-left transition-colors"
+                      style={{ color: "var(--ds-on-surface)" }}
+                      onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "var(--ds-surface-low)" }}
+                      onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = "transparent" }}
+                    >
+                      <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" />
+                        <polyline points="14 2 14 8 20 8" />
+                        <line x1="16" y1="13" x2="8" y2="13" />
+                        <line x1="16" y1="17" x2="8" y2="17" />
+                        <polyline points="10 9 9 9 8 9" />
+                      </svg>
+                      Exportar Word
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>        </div>
 
         {/* Conteúdo do calendário */}
         <div className="flex-1 overflow-auto">

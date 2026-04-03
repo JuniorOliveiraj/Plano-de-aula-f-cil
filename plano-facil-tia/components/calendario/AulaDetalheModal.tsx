@@ -7,6 +7,7 @@ interface AulaDetalheModalProps {
   aula: AulaItem | null
   planoId: string | null
   aulaIndex: number | null
+  aulaId?: string
   onClose: () => void
   onAulaAtualizada: (novasAulas: AulaItem[]) => void
 }
@@ -15,6 +16,7 @@ export default function AulaDetalheModal({
   aula,
   planoId,
   aulaIndex,
+  aulaId,
   onClose,
   onAulaAtualizada,
 }: AulaDetalheModalProps) {
@@ -84,10 +86,11 @@ export default function AulaDetalheModal({
 
   async function salvarTitulo() {
     if (!planoId || aulaIndex === null || !novoTitulo.trim()) return
+    const aulaPath = aulaId ?? String(aulaIndex)
     setSalvandoTitulo(true)
     try {
       const res = await fetch(
-        `/api/calendario/planos/${planoId}/aulas/${aulaIndex}`,
+        `/api/calendario/planos/${planoId}/aulas/${aulaPath}`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -108,11 +111,12 @@ export default function AulaDetalheModal({
 
   async function salvarData(forcar = false) {
     if (!planoId || aulaIndex === null) return
+    const aulaPath = aulaId ?? String(aulaIndex)
     setSalvando(true)
     setErro(null)
     try {
       const res = await fetch(
-        `/api/calendario/planos/${planoId}/aulas/${aulaIndex}`,
+        `/api/calendario/planos/${planoId}/aulas/${aulaPath}`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },

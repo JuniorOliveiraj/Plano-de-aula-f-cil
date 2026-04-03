@@ -9,6 +9,7 @@ interface PlanCardProps {
   serie: string
   tipo: "MENSAL" | "AULA_UNICA"
   dataCriacao: string
+  origem?: "plano" | "calendario"
 }
 
 const materiaEmoji: Record<string, string> = {
@@ -21,7 +22,7 @@ const materiaEmoji: Record<string, string> = {
   "Ed. Física":  "⚽",
 }
 
-export default function PlanCard({ planoId, materia, serie, tipo, dataCriacao }: PlanCardProps) {
+export default function PlanCard({ planoId, materia, serie, tipo, dataCriacao, origem = "plano" }: PlanCardProps) {
   const router = useRouter()
   const emoji = materiaEmoji[materia] ?? "📄"
   const tipoLabel = tipo === "MENSAL" ? "Plano Mensal" : "Aula Única"
@@ -33,7 +34,6 @@ export default function PlanCard({ planoId, materia, serie, tipo, dataCriacao }:
   const [baixando, setBaixando] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
-  // fecha ao clicar fora
   useEffect(() => {
     if (!menuAberto) return
     function onClickFora(e: MouseEvent) {
@@ -49,19 +49,25 @@ export default function PlanCard({ planoId, materia, serie, tipo, dataCriacao }:
     setMenuAberto(false)
     setBaixando(true)
     try {
-      const res = await fetch(`/api/planos/${planoId}?formato=${formato}`)
+      const url = origem === "calendario"
+        ? `/api/calendario/planos/${planoId}/download?formato=${formato}`
+        : `/api/planos/${planoId}?formato=${formato}`
+      const res = await fetch(url)
       if (!res.ok) { alert("Erro ao baixar. Tenta de novo!"); return }
       const blob = await res.blob()
-      const url = URL.createObjectURL(blob)
       const a = document.createElement("a")
-      a.href = url
+      a.href = URL.createObjectURL(blob)
       a.download = `plano_${serie}_${materia}.${formato === "pdf" ? "pdf" : "docx"}`
       a.click()
-      URL.revokeObjectURL(url)
+      URL.revokeObjectURL(a.href)
     } finally {
       setBaixando(false)
     }
   }
+
+  const verHref = origem === "calendario"
+    ? `/dashboard/calendario`
+    : `/dashboard/plano/resultado/${planoId}`
 
   return (
     <div
@@ -201,7 +207,7 @@ export default function PlanCard({ planoId, materia, serie, tipo, dataCriacao }:
         </div>
 
         <button
-          onClick={() => router.push(`/dashboard/plano/resultado/${planoId}`)}
+          onClick={() => router.push(verHref)}
           className="flex items-center justify-center gap-1.5 h-10 px-4 rounded-[10px] text-[13px] font-500 transition-colors duration-150"
           style={{
             backgroundColor: "var(--ds-surface-low)",

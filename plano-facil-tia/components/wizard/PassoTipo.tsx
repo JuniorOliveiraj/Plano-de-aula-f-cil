@@ -198,10 +198,45 @@ function DatePicker({ value, onChange }: DatePickerProps) {
 
 // ── Componente principal ─────────────────────────────────────────
 export default function PassoTipo() {
-  const { tipo, setTipo, pagDe, pagAte, setPaginas, avancar, voltar, dataAula, setDataAula, modo } = useWizardStore()
+  const { tipo, setTipo, pagDe, pagAte, setPaginas, avancar, voltar, dataAula, setDataAula, modo, mesReferencia, setMesReferencia } = useWizardStore()
+
+  // Mês/ano atual como default para plano mensal
+  const hoje = new Date()
+  const [mesSel, setMesSel] = useState(() => {
+    if (mesReferencia) {
+      const [m] = mesReferencia.split("/").map(Number)
+      return m - 1
+    }
+    return hoje.getMonth()
+  })
+  const [anoSel, setAnoSel] = useState(() => {
+    if (mesReferencia) {
+      const [, a] = mesReferencia.split("/").map(Number)
+      return a
+    }
+    return hoje.getFullYear()
+  })
+
+  function navMesSel(delta: number) {
+    let nm = mesSel + delta
+    let na = anoSel
+    if (nm < 0) { nm = 11; na-- }
+    if (nm > 11) { nm = 0; na++ }
+    setMesSel(nm)
+    setAnoSel(na)
+    setMesReferencia(`${String(nm + 1).padStart(2, "0")}/${na}`)
+  }
+
+  // Inicializa mesReferencia se ainda não estiver definido
+  useEffect(() => {
+    if ((tipo === "MENSAL" || tipo === "QUINZENAL") && !mesReferencia) {
+      setMesReferencia(`${String(mesSel + 1).padStart(2, "0")}/${anoSel}`)
+    }
+  }, [tipo])
 
   const podeAvancar =
-    tipo === "MENSAL" ||
+    (tipo === "MENSAL" && mesReferencia.length > 0) ||
+    (tipo === "QUINZENAL" && mesReferencia.length > 0) ||
     (tipo === "AULA_UNICA" && modo === "SEM_PDF" && dataAula.length === 10) ||
     (tipo === "AULA_UNICA" && modo !== "SEM_PDF" &&
       ((!pagDe && !pagAte) || (pagDe && pagAte && !isNaN(Number(pagDe)) && !isNaN(Number(pagAte)))))
@@ -225,10 +260,24 @@ export default function PassoTipo() {
           <p className="text-[13px]" style={{ color: "var(--ds-terracotta)" }}>20 a 25 aulas — cobre o mês inteiro</p>
         </button>
 
+        {/* Quinzenal */}
+        <button
+          onClick={() => setTipo("QUINZENAL")}
+          className="flex flex-col items-start gap-2 p-5 rounded-2xl text-left transition"
+          style={{
+            backgroundColor: tipo === "QUINZENAL" ? "var(--ds-surface-low)" : "var(--ds-surface)",
+            outline: tipo === "QUINZENAL" ? "2px solid var(--ds-primary-bright)" : "none",
+          }}
+        >
+          <span className="text-2xl">📆</span>
+          <p className="text-[15px] font-600" style={{ color: "var(--ds-on-surface)" }}>Plano Quinzenal</p>
+          <p className="text-[13px]" style={{ color: "var(--ds-terracotta)" }}>15 aulas — cobre duas semanas</p>
+        </button>
+
         {/* Aula única */}
         <button
           onClick={() => setTipo("AULA_UNICA")}
-          className="flex flex-col items-start gap-2 p-5 rounded-2xl text-left transition"
+          className="flex flex-col items-start gap-2 p-5 rounded-2xl text-left transition col-span-2"
           style={{
             backgroundColor: tipo === "AULA_UNICA" ? "var(--ds-surface-low)" : "var(--ds-surface)",
             outline: tipo === "AULA_UNICA" ? "2px solid var(--ds-primary-bright)" : "none",
@@ -239,6 +288,32 @@ export default function PassoTipo() {
           <p className="text-[13px]" style={{ color: "var(--ds-terracotta)" }}>1 aula detalhada e específica</p>
         </button>
       </div>
+
+      {/* Seletor de mês — plano mensal ou quinzenal no modo SEM_PDF */}
+      {(tipo === "MENSAL" || tipo === "QUINZENAL") && modo === "SEM_PDF" && (
+        <div className="rounded-2xl p-4 mb-6" style={{ backgroundColor: "var(--ds-surface)" }}>
+          <p className="text-sm font-medium mb-3" style={{ color: "var(--ds-terracotta)" }}>
+            Mês de referência <span style={{ color: "var(--ds-ink-error)" }}>*</span>
+          </p>
+          <div className="flex items-center justify-between gap-3">
+            <button type="button" onClick={() => navMesSel(-1)}
+              className="w-9 h-9 flex items-center justify-center rounded-xl transition-colors"
+              style={{ backgroundColor: "var(--ds-surface-low)", color: "var(--ds-on-surface)" }}
+            >
+              <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+            </button>
+            <span className="text-[15px] font-600" style={{ color: "var(--ds-on-surface)" }}>
+              {MESES[mesSel]} {anoSel}
+            </span>
+            <button type="button" onClick={() => navMesSel(1)}
+              className="w-9 h-9 flex items-center justify-center rounded-xl transition-colors"
+              style={{ backgroundColor: "var(--ds-surface-low)", color: "var(--ds-on-surface)" }}
+            >
+              <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Date picker — aula única no modo SEM_PDF */}
       {tipo === "AULA_UNICA" && modo === "SEM_PDF" && (

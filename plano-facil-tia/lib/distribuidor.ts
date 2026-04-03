@@ -1,10 +1,12 @@
 export interface AulaItem {
+  id?: string
   aula: string
   data: string           // "DD/MM/AAAA"
   conteudo: string
   objetivo: string
   recursos: string[]
   metodologia: string
+  codigoBncc?: string | null
   video_url: string | null
   referencia_url: string | null
 }

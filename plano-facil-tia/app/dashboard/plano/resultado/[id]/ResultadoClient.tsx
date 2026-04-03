@@ -8,13 +8,19 @@ interface Props {
   planoId: string
   serie: string
   materia: string
-  tipo: "MENSAL" | "AULA_UNICA"
+  tipo: "MENSAL" | "QUINZENAL" | "AULA_UNICA"
   aulas: Aula[]
   createdAt: string
   codigoBncc?: string
+  codigosBncc?: string[]
 }
 
-export default function ResultadoClient({ planoId, serie, materia, tipo, aulas, createdAt, codigoBncc }: Props) {
+export default function ResultadoClient({ planoId, serie, materia, tipo, aulas, createdAt, codigoBncc, codigosBncc }: Props) {
+  // Unifica legado e multi-seleção
+  const codigos = codigosBncc && codigosBncc.length > 0
+    ? codigosBncc
+    : codigoBncc ? [codigoBncc] : []
+  const codigosLabel = codigos.length > 0 ? codigos.join(", ") : "—"
   const [showFull, setShowFull] = useState(false)
   const [baixando, setBaixando] = useState(false)
 
@@ -93,7 +99,7 @@ export default function ResultadoClient({ planoId, serie, materia, tipo, aulas, 
               {displayedAulas.map((aula, i) => (
                 <tr key={i} style={{ borderTop: "1px solid var(--ds-border)" }}>
                   <td className="px-4 py-3 font-600 whitespace-nowrap" style={{ color: "var(--ds-secondary)" }}>
-                    {codigoBncc ?? "—"}
+                    {codigosLabel}
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap" style={{ color: "var(--ds-terracotta)" }}>{aula.data}</td>
                   <td className="px-4 py-3" style={{ color: "var(--ds-on-surface)" }}>{aula.objetivo}</td>

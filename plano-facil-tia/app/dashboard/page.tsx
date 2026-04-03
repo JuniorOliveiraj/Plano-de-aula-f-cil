@@ -5,6 +5,8 @@ import { redirect } from "next/navigation"
 import StatCard from "@/components/shared/StatCard"
 import PlanCard from "@/components/shared/PlanCard"
 
+export const dynamic = "force-dynamic"
+
 export default async function DashboardPage() {
   const session = await auth()
   if (!session?.user) redirect("/login")
@@ -16,12 +18,27 @@ export default async function DashboardPage() {
     select: { plano: true, planosNoMes: true, trialExpiraEm: true, planoResetEm: true },
   })
 
-  const planosRecentes = await prisma.plano.findMany({
-    where: { userId },
-    orderBy: { createdAt: "desc" },
-    take: 3,
-    select: { id: true, serie: true, materia: true, tipo: true, createdAt: true },
-  })
+  const [planosRecentes, planosCalendarioRecentes] = await Promise.all([
+    prisma.plano.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+      take: 3,
+      select: { id: true, serie: true, materia: true, tipo: true, createdAt: true },
+    }),
+    prisma.planoCalendario.findMany({
+      where: { userId },
+      orderBy: { createdAt: "desc" },
+      take: 3,
+      select: { id: true, serie: true, materia: true, tipo: true, createdAt: true },
+    }),
+  ])
+
+  const planosRecentesMerged = [
+    ...planosRecentes.map((p) => ({ ...p, origem: "plano" as const })),
+    ...planosCalendarioRecentes.map((p) => ({ ...p, origem: "calendario" as const })),
+  ]
+    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+    .slice(0, 3)
 
   // Calcula stats
   const plano = user?.plano ?? "TRIAL"
@@ -125,7 +142,7 @@ export default async function DashboardPage() {
           </Link>
         </div>
 
-        {planosRecentes.length === 0 ? (
+        {planosRecentesMerged.length === 0 ? (
           <div
             className="flex flex-col items-center justify-center py-12 rounded-[20px] text-center"
             style={{ backgroundColor: "var(--ds-surface-low)" }}
@@ -136,13 +153,14 @@ export default async function DashboardPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {planosRecentes.map((p) => (
+            {planosRecentesMerged.map((p) => (
               <PlanCard
                 key={p.id}
                 planoId={p.id}
                 materia={p.materia}
                 serie={p.serie}
                 tipo={p.tipo as "MENSAL" | "AULA_UNICA"}
+                origem={p.origem}
                 dataCriacao={p.createdAt.toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" })}
               />
             ))}

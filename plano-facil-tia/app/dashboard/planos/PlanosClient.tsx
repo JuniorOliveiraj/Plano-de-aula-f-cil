@@ -9,6 +9,7 @@ interface Plano {
   materia: string
   tipo: "MENSAL" | "AULA_UNICA"
   dataCriacao: string
+  origem: "plano" | "calendario"
 }
 
 const materiaEmoji: Record<string, string> = {
@@ -17,7 +18,7 @@ const materiaEmoji: Record<string, string> = {
 }
 
 // ── Botão de download com dropdown ─────────────────────────────
-function BotaoDownload({ id, serie, materia }: { id: string; serie: string; materia: string }) {
+function BotaoDownload({ id, serie, materia, origem }: { id: string; serie: string; materia: string; origem: "plano" | "calendario" }) {
   const [menuAberto, setMenuAberto] = useState(false)
   const [baixando, setBaixando] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
@@ -37,15 +38,17 @@ function BotaoDownload({ id, serie, materia }: { id: string; serie: string; mate
     setMenuAberto(false)
     setBaixando(true)
     try {
-      const res = await fetch(`/api/planos/${id}?formato=${formato}`)
+      const url = origem === "calendario"
+        ? `/api/calendario/planos/${id}/download?formato=${formato}`
+        : `/api/planos/${id}?formato=${formato}`
+      const res = await fetch(url)
       if (!res.ok) { alert("Erro ao baixar. Tenta de novo!"); return }
       const blob = await res.blob()
-      const url = URL.createObjectURL(blob)
       const a = document.createElement("a")
-      a.href = url
+      a.href = URL.createObjectURL(blob)
       a.download = `plano_${serie}_${materia}.${formato === "pdf" ? "pdf" : "docx"}`
       a.click()
-      URL.revokeObjectURL(url)
+      URL.revokeObjectURL(a.href)
     } finally {
       setBaixando(false)
     }
@@ -154,10 +157,11 @@ export default function PlanosClient({ planos }: { planos: Plano[] }) {
     return true
   })
 
-  async function handleExcluir(id: string) {
+  async function handleExcluir(id: string, origem: "plano" | "calendario") {
     if (!confirm("Tem certeza? Não dá pra desfazer.")) return
     setExcluindo(id)
-    const res = await fetch(`/api/planos/${id}`, { method: "DELETE" })
+    const url = origem === "calendario" ? `/api/calendario/planos/${id}` : `/api/planos/${id}`
+    const res = await fetch(url, { method: "DELETE" })
     if (res.ok) {
       setLista((prev) => prev.filter((p) => p.id !== id))
     } else {
@@ -266,9 +270,9 @@ export default function PlanosClient({ planos }: { planos: Plano[] }) {
               </div>
 
               <div className="flex gap-2">
-                <BotaoDownload id={p.id} serie={p.serie} materia={p.materia} />
+                <BotaoDownload id={p.id} serie={p.serie} materia={p.materia} origem={p.origem} />
                 <Link
-                  href={`/dashboard/plano/resultado/${p.id}`}
+                  href={p.origem === "calendario" ? "/dashboard/calendario" : `/dashboard/plano/resultado/${p.id}`}
                   className="flex items-center justify-center h-10 w-10 rounded-[10px] no-underline transition-colors"
                   style={{ backgroundColor: "var(--ds-surface-low)", color: "var(--ds-terracotta)" }}
                   onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.backgroundColor = "var(--ds-surface-container)" }}
@@ -281,7 +285,7 @@ export default function PlanosClient({ planos }: { planos: Plano[] }) {
                   </svg>
                 </Link>
                 <button
-                  onClick={() => handleExcluir(p.id)}
+                  onClick={() => handleExcluir(p.id, p.origem)}
                   disabled={excluindo === p.id}
                   className="flex items-center justify-center h-10 w-10 rounded-[10px] transition-colors disabled:opacity-50"
                   style={{ backgroundColor: "var(--ds-surface-low)", color: "var(--ds-ink-error)" }}

@@ -6,12 +6,15 @@ import {
   TableCell,
   Paragraph,
   TextRun,
-  HeadingLevel,
   WidthType,
   BorderStyle,
-  AlignmentType,
 } from "docx"
 import type { PlanoGerado } from "@/lib/validations"
+
+// Retorna o código BNCC da aula, com fallback para o campo legado do plano
+function bnccDaAula(aula: PlanoGerado["aulas"][number], plano: PlanoGerado): string {
+  return aula.codigoBncc || plano.codigoBncc || "—"
+}
 
 // Colunas baseadas na estrutura pedagógica da Catarina
 const COLUNAS = [
@@ -69,11 +72,11 @@ export async function gerarDocx(plano: PlanoGerado): Promise<Buffer> {
     (aula) =>
       new TableRow({
         children: [
-          celula(`${aula.data}\n${plano.materia}`), // Agrupa data e matéria na mesma célula
+          celula(`${aula.data}\n${plano.materia}`),
           celula(aula.objetivo),
-          celula(plano.codigoBncc ?? "—"),
+          celula(bnccDaAula(aula, plano)),
           celula(aula.metodologia),
-          celula("Atividades no caderno / Participação e envolvimento"), // Padrão da Catarina
+          celula("Atividades no caderno / Participação e envolvimento"),
         ],
       })
   )

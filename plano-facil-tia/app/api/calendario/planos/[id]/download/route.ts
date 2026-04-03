@@ -2,11 +2,10 @@ import { auth } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { gerarDocx } from "@/lib/docx"
 import { gerarPdf } from "@/lib/pdf"
-import type { AulaItem } from "@/lib/distribuidor"
+import { aulaToAulaItem } from "@/lib/aula-serializer"
 import type { PlanoGerado } from "@/lib/validations"
 
 // GET /api/calendario/planos/[id]/download?formato=word|pdf&aulaIndex=N
-// aulaIndex opcional — se omitido, baixa todas as aulas do plano
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -22,14 +21,16 @@ export async function GET(
   const formato = searchParams.get("formato") ?? "word"
   const aulaIndexParam = searchParams.get("aulaIndex")
 
-  const plano = await prisma.planoCalendario.findUnique({ where: { id } })
+  const plano = await (prisma.planoCalendario as any).findUnique({
+    where: { id },
+    include: { aulas: { orderBy: { ordem: "asc" } } },
+  }) as { id: string; userId: string; serie: string; materia: string; aulas: any[] } | null
   if (!plano || plano.userId !== userId) {
     return Response.json({ erro: "Plano não encontrado" }, { status: 404 })
   }
 
-  const todasAulas = plano.jsonData as unknown as AulaItem[]
+  const todasAulas = (plano.aulas as any[]).map(aulaToAulaItem)
 
-  // Filtrar aula específica ou usar todas
   const aulas =
     aulaIndexParam !== null
       ? [todasAulas[Number(aulaIndexParam)]].filter(Boolean)
@@ -39,11 +40,9 @@ export async function GET(
     return Response.json({ erro: "Aula não encontrada" }, { status: 404 })
   }
 
-  // Montar estrutura compatível com gerarDocx/gerarPdf
   const planoGerado: PlanoGerado = {
     serie: plano.serie,
     materia: plano.materia,
-    codigoBncc: undefined,
     aulas: aulas.map((a) => ({
       aula: a.aula,
       data: a.data,
@@ -51,6 +50,7 @@ export async function GET(
       conteudo: a.conteudo,
       metodologia: a.metodologia,
       recursos: a.recursos,
+      codigoBncc: a.codigoBncc ?? null,
       video_url: a.video_url,
       referencia_url: a.referencia_url,
     })),

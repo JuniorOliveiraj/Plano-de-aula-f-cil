@@ -25,7 +25,14 @@ export function paginar<T>(items: T[], pagina: number): { exibidas: T[] } {
 }
 
 export default function PassoBncc() {
-  const { serie, materia, codigoBncc, setCodigoBncc, avancar, voltar } = useWizardStore()
+  const {
+    serie, materia, tipo,
+    codigoBncc, setCodigoBncc,
+    codigosBncc, toggleCodigoBncc,
+    avancar, voltar,
+  } = useWizardStore()
+
+  const isMulti = tipo !== "AULA_UNICA"
 
   const [habilidades, setHabilidades] = useState<Habilidade[]>([])
   const [loading, setLoading] = useState(false)
@@ -64,11 +71,20 @@ export default function PassoBncc() {
   const { exibidas } = paginar(habilidades, pagina)
   const temMais = exibidas.length < habilidades.length
 
+  // Botão avançar habilitado se tiver pelo menos 1 selecionada
+  const podeAvancar = isMulti ? codigosBncc.length > 0 : Boolean(codigoBncc)
+
   return (
     <div>
-      <h2 className="text-xl font-medium mb-6" style={{ color: "var(--ds-terracotta)" }}>
-        Selecione a habilidade BNCC
+      <h2 className="text-xl font-medium mb-1" style={{ color: "var(--ds-terracotta)" }}>
+        {isMulti ? "Selecione as habilidades BNCC" : "Selecione a habilidade BNCC"}
       </h2>
+      {isMulti && (
+        <p className="text-[13px] mb-5" style={{ color: "var(--ds-muted)" }}>
+          Você pode selecionar mais de uma habilidade para o plano.
+        </p>
+      )}
+      {!isMulti && <div className="mb-5" />}
 
       {loading && (
         <div className="flex justify-center py-10">
@@ -79,11 +95,7 @@ export default function PassoBncc() {
       {!loading && erro && (
         <div className="mb-6">
           <p className="text-sm mb-3" style={{ color: "var(--ds-ink-error)" }}>{erro}</p>
-          <button
-            onClick={buscar}
-            className="text-[13px] font-medium underline"
-            style={{ color: "var(--ds-secondary)" }}
-          >
+          <button onClick={buscar} className="text-[13px] font-medium underline" style={{ color: "var(--ds-secondary)" }}>
             Tentar novamente
           </button>
         </div>
@@ -98,17 +110,36 @@ export default function PassoBncc() {
       {!loading && !erro && habilidades.length > 0 && (
         <div className="flex flex-col gap-2 mb-4">
           {exibidas.map((h) => {
-            const selecionado = codigoBncc === h.codigo
+            const selecionado = isMulti
+              ? codigosBncc.includes(h.codigo)
+              : codigoBncc === h.codigo
+
             return (
               <button
                 key={h.codigo}
-                onClick={() => setCodigoBncc(h.codigo, h.descricao)}
-                className="rounded-[12px] px-4 py-3 text-left transition"
+                onClick={() =>
+                  isMulti
+                    ? toggleCodigoBncc(h.codigo, h.descricao)
+                    : setCodigoBncc(h.codigo, h.descricao)
+                }
+                className="rounded-[12px] px-4 py-3 text-left transition flex items-start gap-3"
                 style={{
                   backgroundColor: selecionado ? "var(--ds-surface-low)" : "var(--ds-surface)",
                   outline: selecionado ? "2px solid var(--ds-primary-bright)" : "none",
                 }}
               >
+                {/* Checkbox visual para multi, radio para único */}
+                <span
+                  className="mt-[2px] shrink-0 w-4 h-4 rounded flex items-center justify-center text-[10px] font-bold"
+                  style={{
+                    borderRadius: isMulti ? "4px" : "50%",
+                    border: selecionado ? "none" : "2px solid var(--ds-border)",
+                    backgroundColor: selecionado ? "var(--ds-primary-bright)" : "transparent",
+                    color: "#fff",
+                  }}
+                >
+                  {selecionado ? "✓" : ""}
+                </span>
                 <span className="text-[13px] text-left" style={{ color: "var(--ds-on-surface)" }}>
                   {formatHabilidade(h)}
                 </span>
@@ -121,14 +152,28 @@ export default function PassoBncc() {
       {temMais && (
         <button
           onClick={() => setPagina((p) => p + 1)}
-          className="text-[13px] font-medium underline mb-6"
+          className="text-[13px] font-medium underline mb-4"
           style={{ color: "var(--ds-secondary)" }}
         >
           Carregar mais
         </button>
       )}
 
-      <div className="flex gap-3 mt-6">
+      {/* Badge com contagem de selecionadas (só no modo multi) */}
+      {isMulti && codigosBncc.length > 0 && (
+        <div
+          className="flex items-center gap-2 px-4 py-2 rounded-[10px] mb-4 text-[13px]"
+          style={{ backgroundColor: "var(--ds-plan-pro-bg)", color: "var(--ds-ink-success)" }}
+        >
+          <span>✅</span>
+          <span>
+            {codigosBncc.length} habilidade{codigosBncc.length > 1 ? "s" : ""} selecionada{codigosBncc.length > 1 ? "s" : ""}:{" "}
+            <strong>{codigosBncc.join(", ")}</strong>
+          </span>
+        </div>
+      )}
+
+      <div className="flex gap-3 mt-2">
         <button
           onClick={voltar}
           className="h-14 px-6 rounded-[14px] font-medium"
@@ -137,7 +182,7 @@ export default function PassoBncc() {
           Voltar
         </button>
         <button
-          disabled={!codigoBncc}
+          disabled={!podeAvancar}
           onClick={avancar}
           className="flex-1 h-14 rounded-[14px] text-white font-semibold disabled:opacity-60 transition-opacity hover:opacity-90"
           style={{ background: "linear-gradient(135deg,#904d00,#ff8c00)" }}
@@ -148,4 +193,3 @@ export default function PassoBncc() {
     </div>
   )
 }
-

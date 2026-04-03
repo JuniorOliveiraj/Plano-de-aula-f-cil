@@ -30,6 +30,15 @@ const nextConfig: NextConfig = {
     root: __dirname,
   },
 
+  // Aumenta timeout do servidor em dev para rotas longas (geração de planos)
+  serverExternalPackages: [],
+
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "10mb",
+    },
+  },
+
   // Libera HMR / dev resources para IPs e domínios da rede local
   allowedDevOrigins: allAllowedHosts,
 
@@ -38,10 +47,8 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        // Aplica os headers em todas as rotas
         source: "/(.*)",
         headers: [
-          // ── Content-Security-Policy ────────────────────────────────────
           {
             key: "Content-Security-Policy",
             value: [
@@ -49,12 +56,12 @@ const nextConfig: NextConfig = {
               `script-src 'self' 'unsafe-inline' 'unsafe-eval'`,
               `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com`,
               `font-src 'self' https://fonts.gstatic.com`,
-              `img-src 'self' data: blob: ${allowedOrigins}`,
-              `connect-src 'self' ${allowedOrigins}`,
+              `img-src 'self' data: blob: ${allowedOrigins} https://lh3.googleusercontent.com`,
+              // ws/wss necessário para HMR do Next.js em dev
+              `connect-src 'self' ws: wss: ${allowedOrigins}`,
               `frame-ancestors 'none'`,
             ].join("; "),
           },
-          // ── CORS ───────────────────────────────────────────────────────
           {
             key: "Access-Control-Allow-Origin",
             value: allowedOrigins,
@@ -67,7 +74,6 @@ const nextConfig: NextConfig = {
             key: "Access-Control-Allow-Headers",
             value: "Content-Type, Authorization",
           },
-          // ── Segurança adicional ────────────────────────────────────────
           {
             key: "X-Frame-Options",
             value: "DENY",

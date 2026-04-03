@@ -11,7 +11,7 @@ interface WizardState {
   // campos existentes
   serie: string
   materia: string
-  tipo: "MENSAL" | "AULA_UNICA" | ""
+  tipo: "MENSAL" | "QUINZENAL" | "AULA_UNICA" | ""
   pagDe: string
   pagAte: string
   pdfFile: File | null
@@ -20,19 +20,25 @@ interface WizardState {
   // novos campos
   modo: "COM_PDF" | "SEM_PDF" | ""
   tema: string
+  // seleção única (AULA_UNICA)
   codigoBncc: string
   descricaoBncc: string
+  // seleção múltipla (MENSAL / QUINZENAL)
+  codigosBncc: string[]
+  descricoesBncc: string[]
   duracao: 45 | 90
 
   // campo de data para integração com calendário
   dataAula: string
+  // mês de referência para plano mensal (formato MM/AAAA)
+  mesReferencia: string
   // nome personalizado da aula (opcional)
   nomeAula: string
 
   // actions existentes
   setSerie: (v: string) => void
   setMateria: (v: string) => void
-  setTipo: (v: "MENSAL" | "AULA_UNICA") => void
+  setTipo: (v: "MENSAL" | "QUINZENAL" | "AULA_UNICA") => void
   setPaginas: (de: string, ate: string) => void
   setPdf: (f: File) => void
   avancar: () => void
@@ -43,8 +49,10 @@ interface WizardState {
   setModo: (v: "COM_PDF" | "SEM_PDF") => void
   setTema: (v: string) => void
   setCodigoBncc: (codigo: string, descricao: string) => void
+  toggleCodigoBncc: (codigo: string, descricao: string) => void
   setDuracao: (v: 45 | 90) => void
   setDataAula: (v: string) => void
+  setMesReferencia: (v: string) => void
   setNomeAula: (v: string) => void
 }
 
@@ -63,8 +71,11 @@ export const useWizardStore = create<WizardState>((set) => ({
   tema: "",
   codigoBncc: "",
   descricaoBncc: "",
+  codigosBncc: [],
+  descricoesBncc: [],
   duracao: 45,
   dataAula: "",
+  mesReferencia: "",
   nomeAula: "",
 
   // actions existentes
@@ -89,17 +100,37 @@ export const useWizardStore = create<WizardState>((set) => ({
       tema: "",
       codigoBncc: "",
       descricaoBncc: "",
+      codigosBncc: [],
+      descricoesBncc: [],
       duracao: 45,
       dataAula: "",
+      mesReferencia: "",
       nomeAula: "",
     }),
 
   // novas actions
   setModo: (v) => set({ modo: v, passo: 2 }),
   setTema: (v) => set({ tema: v }),
+  // seleção única — AULA_UNICA
   setCodigoBncc: (codigo, descricao) =>
     set({ codigoBncc: codigo, descricaoBncc: descricao }),
+  // toggle para multi-seleção — MENSAL / QUINZENAL
+  toggleCodigoBncc: (codigo, descricao) =>
+    set((s) => {
+      const idx = s.codigosBncc.indexOf(codigo)
+      if (idx >= 0) {
+        return {
+          codigosBncc: s.codigosBncc.filter((_, i) => i !== idx),
+          descricoesBncc: s.descricoesBncc.filter((_, i) => i !== idx),
+        }
+      }
+      return {
+        codigosBncc: [...s.codigosBncc, codigo],
+        descricoesBncc: [...s.descricoesBncc, descricao],
+      }
+    }),
   setDuracao: (v) => set({ duracao: v }),
   setDataAula: (v) => set({ dataAula: v }),
+  setMesReferencia: (v) => set({ mesReferencia: v }),
   setNomeAula: (v) => set({ nomeAula: v }),
 }))
